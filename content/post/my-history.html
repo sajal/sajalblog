@@ -1,17 +1,17 @@
 {
-    "tags": [
+    "category": [
+        "Linux", 
+        "personal"
+    ], 
+    "title": "My history", 
+    "url": "/my-history.html", 
+    "tag": [
         "bash", 
         "cli", 
         "Linux"
     ], 
-    "url": "/my-history.html", 
-    "title": "My history", 
     "draft": false, 
-    "date": "Mon, 14 Apr 2008 17:02:35 +0000", 
-    "categories": [
-        "Linux", 
-        "personal"
-    ]
+    "date": "Mon, 14 Apr 2008 17:02:35 +0000"
 }
 Stolen idea from <a href="http://sugree.com/node/114" title="Sugree's history" target="_blank">Sugree</a>...
 <pre lang="Bash">[sajal@localhost ~]$ history|awk '{a[$2]++} END{for(i in a){printf "%5d\t%s\n",a[i],i}}'|sort -rn|head
