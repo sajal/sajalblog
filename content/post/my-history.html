@@ -1,0 +1,28 @@
+{
+    "tags": [
+        "bash", 
+        "cli", 
+        "Linux"
+    ], 
+    "url": "/my-history.html", 
+    "title": "My history", 
+    "draft": false, 
+    "date": "Mon, 14 Apr 2008 17:02:35 +0000", 
+    "categories": [
+        "Linux", 
+        "personal"
+    ]
+}
+Stolen idea from <a href="http://sugree.com/node/114" title="Sugree's history" target="_blank">Sugree</a>...
+<pre lang="Bash">[sajal@localhost ~]$ history|awk '{a[$2]++} END{for(i in a){printf "%5d\t%s\n",a[i],i}}'|sort -rn|head
+239   ./autofollow.pl
+149   ssh
+96   ping
+56   df
+51   cd
+43   ls
+36   su
+23   GET
+22   ./gtalk.pl
+18   whois
+[sajal@localhost ~]$</pre>

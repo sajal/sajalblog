@@ -1,0 +1,76 @@
+{
+    "tags": [
+        "censorship", 
+        "Linux", 
+        "proxy", 
+        "security", 
+        "squid", 
+        "ssh", 
+        "tunnel"
+    ], 
+    "url": "/secure-proxy-using-squid.html", 
+    "title": "Secure Proxy using Squid", 
+    "draft": false, 
+    "date": "Sat, 05 Jan 2008 05:16:52 +0000", 
+    "categories": [
+        "Linux", 
+        "Tutorials"
+    ]
+}
+Had originally posted this on Friday, September 29th, 2006 during the peak of Takhsin's rampant blocking of websites and the blocking proxies were messing up often blocking un-blocked pages also.
+
+It is very important to use a secure proxy if you browse the web from unsecure Networks.
+The basic requirements are a Linux box in a location which is secure and another PC Linux or windows which may be in the unsecure location.
+
+NOTE : Please excuse my newbieness. I do not provide any kind of waranty on this article, only hope that it may be useful or interesting to you.
+
+For this article, the squid was setup on a CentOS based server and accessed from FC5 based notebook using Mozilla Firefox. The settings would be simillar for other distributions/ browsers.
+
+This method is not to be used illegally to view government blocked websites. Please follow laws of the country you reside in.<!--more-->
+
+On CentOS it is very easy to install squid using yum (note you must be root to continue with the instalation)
+<blockquote><em>yum install squid</em></blockquote>
+On Debian based system :-
+<blockquote><em>apt-get install squid</em></blockquote>
+For others/slackware :-
+
+Download squid source file as a gzipped tar ball (squid-x.y-STABLE.tar.gz) available at http://www.squid-cache.org/ or from ftp://www.squid-cache.org/pub. Then run the following commands
+<blockquote><em>tar -xvzf squid-*-src.tar.gz</em>
+<em>cd squid -*</em>
+<em>./configure</em>
+<em>make</em>
+<em>make install</em></blockquote>
+This by default, will install in “/usr/local/squid”.
+
+There are some basic configurations which you may need to edit.
+By default the squid config file is located in /etc/squid/squid.conf on centos with squid installed using yum. Config file may be located at /usr/local/squid/etc/squid.conf if you have installed manually.
+
+Start Squid on CentOS
+<blockquote><em>/etc/init.d/squid start</em></blockquote>
+Squid is now ready to serve as proxy only to local host and is listening on port 3128
+
+Now you have squid listening to localhost only. We need to make a tunnel from the server to the PC.
+Note for windows users reffer to <a href="http://web.archive.org/web/20070505081807/http://www.jfitz.com/tips/putty_config.html" target="_blank" title="Secure tunnel on windows using putty ">putty configuration guide</a>
+to do this on a FC5 (Fedora core instructions may be similar for other distributions) be root(or superuser) and run the following command.
+<blockquote><em>ssh -L 8080:localhost:3128 someserver.com -l username</em></blockquote>
+Replace the someserver.com with the DNS name or IP of your newly setup proxy server.
+In case the SSHD on your server listens to aa port other than port 22, you may need to enter the following command
+<blockquote><em>ssh -L 8080:localhost:3128 someserver.com -p 1022 -l username</em></blockquote>
+In the above example:-
+8080 is a free unused port on your PC. We will tunnel this port to squid.
+localhost is your PC
+3128 is the port on the proxy server where squid is listening to.
+someserver.com is your proxy servers hostname or IP address.
+1022 is the port on your server where SSHD listens to.
+username is your username on the server
+
+After entering the ssh command, you will get a prompt asking for a password. Enter the password for ‘username’.
+
+Open Mozilla Firefox
+Click Edit the preferences. Then click on the box Connection Settings
+Choose Manual proxy configuration.
+Under HTTP proxy type in localhost. For port type in 8080 (change it as per your tunnel settingings)
+Then click OK
+
+You should now be able to use the Web browser to surf the net using browsing the web without fear of packets being sniffed.
+This only encrypts the information exchanged between your workstation and the proxy server. The information from your proxy to the website you are browsing can still be sniffed, so to be on the safe side use https when browsing sites which support it.

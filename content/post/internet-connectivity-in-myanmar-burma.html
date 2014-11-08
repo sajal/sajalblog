@@ -1,0 +1,69 @@
+{
+    "tags": [
+        "#bcy2011", 
+        "BarCamp", 
+        "burma", 
+        "censorship", 
+        "myanmar", 
+        "site performance", 
+        "yangon"
+    ], 
+    "url": "/internet-connectivity-in-myanmar-burma.html", 
+    "title": "Internet connectivity in Myanmar (Burma)", 
+    "draft": false, 
+    "date": "Mon, 21 Feb 2011 09:21:09 +0000", 
+    "categories": [
+        "rants"
+    ]
+}
+Last weekend ( Feb 19th & 20th) I was in Yangon for <a href="http://www.barcampyangon.org/">BarCamp Yangon</a>.
+
+It probably had an attendance of &gt; 4k participants... Probably one of the largest BarCamps ever,  despite the fact that the internet connectivity in Myanmar sucks big time.... Really unusable... 
+
+I used internet at the free "wifi" internet at the hotel and the wifi arranged by the organizers. Both places, the speeds I've seen range from 0 kbps to ~50 kbps.... most of the time around 0 kbps :P
+
+<h3>Internet access</h3>
+
+Most locals use internet at cafes/internet shops. The average shop would have 512 kbps connection shared between 15 to 20 computers charging 300 to 500 MKY ( US$ 0.3 to 0.5 ) per hour for usage. Some give discount if you bring your own laptop, some don't. I didn't get a chance to visit a cafe, this is based on what people told me.
+
+Most geeks have a computer at home, very few have laptops. ADSL is available but is very expensive. It costs > $1000 setup fee + $120/month for a mere 512 kbps. Only the very rich people can afford it.
+
+Mobile internet was unheard of until few weeks ago. They don't have gprs there, but recently they launched 3G and CDMA for wireless internet. CDMA would charge around $0.10/minute for 1 or 2 mbps (don't remember clearly).
+
+Out of the few sites i tried opening, only Facebook seemed to be usable. This is due to the <a href="http://www.youtube.com/watch?v=51JGykHrwZA" title="David Wei and Changhao Jiang (Facebook Inc.) - Frontend Performance Engineering in Facebook">enormous effort</a> they invest in <a href="/tag/site-performance">frontend performance</a>. Google search was also fast, but none of the sites in the results seemed to open.
+
+The average DNS query took me 2+ seconds to resolve. DNS access is limited to the ISPs crappy nameserver, I couldn't use opendns or any external nameservers.
+
+Almost all local sites are hosted outside of Myanmar cause domestic connectivity is as bad as international routes. Server co-location fees are 10x in Burma than in America.
+
+<h3>Censorship</h3>
+
+I didn't use the internet much... but here is what I found.
+
+Among the sites/services blocked :-
+
+<ul>
+<li>My secret project - Details/screenshot below</li>
+<li>Twitter - Blocked normally, but works using https or apps.</li>
+<li>Gmail - works on browser but IMAP doesn't work at all... The most surprising aspect of it is that 99% of ppl there use gmail.</li>
+<li>SSH - connections to port 22 are completely blocked, but I've been told that setting ssh server on port 443 works fine. I used <a href="http://www.splitbrain.org/blog/2008-11/02-dns_tunneling_made_simple">DNS tunnel</a> and it kinda worked occasionally for emergency usage - after trying for 10 - 15 mins i could get 1 min or so of connectivity.</li>
+<li>gtalk - Using Pidgin  - doesn't work at all.</li>
+</ul>
+
+I am building a new webservice called www.{secret}.com . Hardly anyone knows about it. Its got only 3 users, and has nothing to do with Burma. That site was somehow blocked in Burma (only one ISP). I cant understand how {secret} could trigger any phrase based blocklists or something.. Makes me feel important if governments block my site...
+
+My moment of pride :-
+
+<a href="http://i.ticdn.com/sajal/blocked-classified-big.png" title="secret project blocked in burma"><img src="http://i.ticdn.com/sajal/blocked-classified-small.png" alt="secret project blocked in burma" /></a>
+
+<h3>Summary</h3>
+
+BarCamp Yangoon 2011 was probably the biggest barcamp ever with about 4500 to 5000 participants (with about 20 - 30 foreigners traveling in from abroad). An interesting activity was file swapping. There were about 20 - 30 computers setup with shared folders which participants used to exchange software/music/etc. 
+
+Based on a simple survey, everyone uses Firefox. Very few people use Linux. Windows is very popular due to rampant piracy.
+
+I was considering giving a talk on web performance optimization on day 2 of the event, but didn't go thru with it cause an American expat covered the topic well on day 1.
+
+One thing that I should have done would be to download all the <a href="http://velocityconf.com/">Velocity Conference</a> videos and pass it around... unfortunately it occurred to me to late. Ill try to arrange it now...
+
+The country has great people... It can succeed in this digital age if only America and other western countries lift sanctions on Burma..

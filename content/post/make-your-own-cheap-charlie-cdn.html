@@ -1,0 +1,142 @@
+{
+    "tags": [
+        "caching", 
+        "CDN", 
+        "dns", 
+        "perl", 
+        "reverse proxy", 
+        "site performance", 
+        "squid"
+    ], 
+    "url": "/make-your-own-cheap-charlie-cdn.html", 
+    "title": "Make your own cheap charlie CDN", 
+    "draft": false, 
+    "date": "Sat, 28 Jun 2008 05:26:21 +0000", 
+    "categories": [
+        "Linux", 
+        "perl", 
+        "Webmaster Things"
+    ]
+}
+<a href="http://en.wikipedia.org/wiki/Content_Delivery_Network" target="_self">CDN</a> stands for Content Delivery(or Distribution) Network. It is a network of servers usually located in various geographic locations to improve the availability and access speed of a website (or webapp or other media). The main use of CDNs were during the nineteens when inter-continental access was slow, scarce and expensive. Origin server could be in the silicon valley, users from UK would access the node located in UK, so in theory only once the page would be downloaded from the US server to the UK server. Thus allowing the UK visitors to access the page locally resulting in a huge saving in inter-continental bandwidth costs and improved access times for the end users.
+
+CDNs are traditionally a very expensive solution to implement if using any of the <a href="http://en.wikipedia.org/wiki/Content_Delivery_Network#Commercial_CDNs">established providers</a>. The solution in itself is not very complex. I am in the process of implementing my very own CDN. The benefits are simple.
+<ul>
+	<li>It would reduce load on the origin server</li>
+	<li>Faster access if user downloads pages from a server closer to them</li>
+	<li>Since load on origin server is low, faster access even if cache needs to be refreshed</li>
+</ul>
+Some major portions of the CDN I am looking to implement
+<ol>
+	<li><strong>Origin Server(s)</strong></li>
+	<li><strong>Geo targeting DNS servers</strong></li>
+	<li><strong>Squid Cache</strong> - Set as Reverse Proxy or web accelerator</li>
+</ol>
+<!--more--><strong>Origin Server</strong> : This at the moment is a single server, which may be increased to run mysql and apache on separate boxes to increase productivity. This is up and running and in production.
+
+<strong>Geo targeting DNS servers</strong> : A perl script making use of Geo::IP and Net::DNS::Nameserver modules to resolve the query based on the origin country of the requester. The DNS script is in very early development. At the moment it is basically the example usage of Net::DNS::Nameserver with the Geo::IP loosely implemented. Need to implement some way of using config files which flush every 10 minutes, so I can use a series of servers runing this script and changes in config can be done on one server and rsynced across all nameservers running this script. The perl script is attached in the end. It would resolve foo.example.com differently if the request came from Malaysia.
+<strong>
+Squid Cache</strong> : Squid cache is an Free proxy server which can be setup as a Reverse proxy. Users would query this proxy for pages and the proxy would deliver content, flushing the cache based on the rules defined in the squid.conf file and/or the expires headers tag set by the origin server. It can be setup such that different filetypes are cached in a different manner. Different url patterns need to be cached differently. Queries to some URL patterns by logged-in(based on cookies) users should be direct from origin server. These configurations are a little complicated. My plan for this configuration is attached in the end.
+
+The Geo Dns and Squid would be installed on cheap VPS in a few countries. Will start with one to see how well it scales.
+
+EDIT 1 : Playing with <a href="http://varnish.projects.linpro.no/">Varnish</a> at the moment, considering it over squid.
+
+The Geo Dns perl script :
+<pre lang="perl">#!/usr/bin/perl
+
+use Geo::IP;
+use Net::DNS::Nameserver;
+use strict;
+use warnings;
+
+sub reply_handler {
+my ($qname, $qclass, $qtype, $peerhost,$query) = @_;
+my ($rcode, @ans, @auth, @add);
+
+my $gi = Geo::IP-&gt;new(GEOIP_STANDARD);
+print "Received query from $peerhost\n";
+my $ip =  substr $peerhost, 7;
+my $country = $gi-&gt;country_code_by_addr($ip);
+print "--$ip--$country \n\n";
+$query-&gt;print;
+
+if ($qtype eq "A" &amp;&amp; $qname eq "foo.example.com" ) {
+my ($ttl, $rdata) = (3600, "10.1.2.3");
+if ($country eq "MY" ) {
+$rdata = "10.1.2.4";
+}
+push @ans, Net::DNS::RR-&gt;new("$qname $ttl $qclass $qtype $rdata");
+$rcode = "NOERROR";
+}elsif( $qname eq "foo.example.com" ) {
+$rcode = "NOERROR";
+
+}else{
+$rcode = "NXDOMAIN";
+}
+
+# mark the answer as authoritive (by setting the 'aa' flag
+return ($rcode, \@ans, \@auth, \@add, { aa =&gt; 1 });
+}
+
+my $ns = Net::DNS::Nameserver-&gt;new(
+LocalPort    =&gt; 53,
+ReplyHandler =&gt; \&amp;reply_handler,
+
+Verbose      =&gt; 1,
+) || die "couldn't create nameserver object\n";
+
+$ns-&gt;main_loop;</pre>
+My idea for squid.conf :
+<pre lang="html">1) Forward proxy :-
+
+Allow following IPs to browse any website without any caching... allow https also...
+
+a.b.c.d
+w.x.y.z
+127.0.0.1 (ill do a ssh tunnel)
+
+2) Reverse proxy :-
+
+Rules (to be followed serially, if rule 3 and 5 both match, rule 3 should be used):-
+
+1) All urls ending in the following must be cached for minimum 5 days or expires headder. dont even check to see if file has updated.
+
+.jpg, .gif, .css, .js, .swf, .png  (not case sensitive )
+
+2) POST should never be cached
+
+3) Few URLs should be cached for 30 mins (minimum/maximum) no matter what the expires headder says.
+
+http://www.mysite.com/urla/
+http://www.mysite.com/urlc.html
+etc...
+
+4) Requests to http://www.mysite.com/sectiona/* :-
+
+* If user has following cookies pass them direct hint : "acl cookie_test req_header Cookie ﻿^.*(comment_author_|wordpress|wp-postpass_).*$"
+* http://www.mysite.com/sectiona/sub-section1/* : 30 mins cache no matter what!
+* If requester is Googlebot : serve from cache only if it the copy in cache is 5 mins old. else update the cache.
+* for other users cache urls ending in .html for 60 mins , rest for 20 mins
+
+5) Requests to http://www.mysite.com/sectionb/*
+
+* no cache unless images.
+* Allow access only if user has a particular cookie e.g. secret_word=another_word
+
+6) urls which are NOT in point 4 or 5 :-
+
+* If users have cookie eg. no_cache then pass direct
+* 5 min cache for http://www.mysite.com/sectionc/*
+* Cache the shit out of everything else for 30 mins
+
+Special Instructions : If origin server is unreachable then show cached result, no matter what. The first cache server is a VPS running ubuntu server with 128 megs of dedicated non-burstable ram and has 4.3 GB diskspace left. resources can be upgraded on request. Where I have mentioned "no matter what" i dont want the proxy server bothering the origin server at all. The origin and proxies will be located far geographically so connection between them may not be optimal.
+
+In case squid allows for URL rewriting, i would like to also map for example :-
+us.mysite.com -&gt; www.mysite.com
+
+so if user can access the same stuff by going to www.mysite.com or even us.mysite.com
+
+Also if URL rewriting is possible in Squid, in the future id like to be able to map ... http://www.mysite.com/subfolder as http://somesite.com/subfolder and http://www.mysite.com/anotherfolder as http://anothersite.com/anotherfolder
+
+Also.. if squid supports ssl, would it be possible to use https (and also install some certificate on the squid) then users connection to and from the proxy is encrypted if needed, but the connection between squid and origin server is plaintext ?</pre>

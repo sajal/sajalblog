@@ -1,0 +1,69 @@
+{
+    "tags": [
+        "availability", 
+        "CDN", 
+        "maxcdn", 
+        "simplecdn"
+    ], 
+    "url": "/simplecdn-goes-down-a-case-for-using-multiple-cdn-providers.html", 
+    "title": "SimpleCDN goes down - a case for using multiple CDN providers", 
+    "draft": false, 
+    "date": "Sat, 11 Dec 2010 21:24:49 +0000", 
+    "categories": [
+        "Webmaster Things"
+    ]
+}
+CDN provider <a href="http://www.simplecdn.com/">SimpleCDN</a> has been down since last few days, with their customers venting their anger via online channels such as <a href="http://search.twitter.com/search?q=SimpleCDN">twitter</a>.
+
+To know more about what a CDN is, please read <a href="/make-your-own-cheap-charlie-cdn.html" title="Make your own cheap charlie CDN">this post</a>.
+
+The reason given by them :-
+
+<blockquote><em>Dear SimpleCDN Customer,
+
+I am writing this letter to update you on a situation that has been developing for the past 72 hours between SimpleCDN and our technology and infrastructure providers, SoftLayer and Hosting Services, Inc.
+
+Two days ago these organizations decided to immediately terminate our contract and suspend service on much of our infrastructure in Dallas, Seattle and Washington, D.C. This infrastructure constitutes the majority of our delivery network for our value services, including on-demand and live streaming services. 
+
+[...]</em></blockquote>
+
+Their full statement can be read at <a href="http://admin.simplecdn.com/">http://admin.simplecdn.com/</a>. Quite likely this won't be the permanent url for their rant.
+
+My first thought was that they didn't pay their bills.. but this <a href="http://twitter.com/#!/SimpleCDN/status/13688306478882816">doesn't seem</a> to be the case here. I'd speculate that this is related to DMCA or even some connection to Wikileaks. We need Softlayer's side of the story to make an opinion. I'm a Softlayer user for few years, I refuse to believe it that they did it for competitive advantage. There is more to it!
+
+MaxCDN has <a href="http://blog.maxcdn.com/news/maxcdn-offers-easy-transition-for-stranded-simplecdn-customers/" title="MaxCDN Offers Easy Transition for Stranded SimpleCDN Customers">stepped in</a> to help stranded SimpleCDN customers to get their sites up asap at lower costs.
+
+So... let me be <a href="http://www.youtube.com/watch?v=cY_oKve-bH0">Captain Hindsight</a> here and say what SimpleCDN users should have done all along.
+
+<strong>Keep a hot spare CDN ready to be deployed at a moments notice.</strong>
+
+There are many CDN services, like <a href="http://www.softlayer.com/cloudlayer/cdn/">Softlayer</a>, <a href="http://aws.amazon.com/cloudfront/">CloudFront</a>, etc which have pay as you go plans, no upfront or monthly costs. Sign up for them, set up your zones, and keep the required CNAMEs handy. If your prime CDN provider goes under, has high latency, or any other issue, switching to these alternate CDNs is simply a change in the DNS zone. This could be automated with <a href="http://aws.amazon.com/route53/">Amazon Route 53</a>.
+
+Very easy to implement for origin pull, for uploaded content it doesn't hurt to store your content on multiple services for redundancy.
+
+Had the users kept a hot spare CDN provider ready, it would have taken them 5 mins (plus the DNS propagation time) to switch to another provider.
+
+In most cases, where only css, javascript, images are served by the CDN, frequent users such as admins would have these files in their browser cache and may not feel that anything is broken. For such situations, the answer is <a href="http://blog.patrickmeenan.com/2010/08/passive-vs-active-performance.html" title="Passive vs Active performance monitoring">passive monitoring</a>.
+
+Bottomline: Everything FAILs.... eventually...
+
+Notes:-
+<ul>
+    <li>This blog is hosted at softlayer</li>
+    <li>This blog uses MaxCDN</li>
+    <li>This blog uses Softlayer's CDN service</li>
+    <li>Before today i hadn't heard about SimpleCDN</li>
+</ul>
+
+<strong>UPDATED: 11:20 (EST) Dec 15</strong>
+
+The only 2 statements by SoftLayer on this issue comes in the form of tweets.
+
+<em>FYI, our privacy policy prevents us from discussing customer issues in public. We definitely can't discuss customers of customers.</em> - <a href="http://twitter.com/#!/SoftLayer/status/14822398792564736">twitter</a>
+
+<em>@simplecdn happy to have you as a direct customer. Send over your requirements so we can price it out for you. ^SK</em> - <a href="http://twitter.com/#!/SoftLayer/status/15059240414609408">twitter</a>
+
+IMHO the second tweet is rubbing salt on SimpleCDN's wound.
+
+It is common for companies under legal threat to not make any statements which may or maynot be used against them during litigation.
+

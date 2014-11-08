@@ -1,0 +1,52 @@
+{
+    "tags": [
+        "Python", 
+        "search"
+    ], 
+    "url": "/prospective-search-using-python.html", 
+    "title": "Prospective search using python", 
+    "draft": false, 
+    "date": "Wed, 22 Jul 2009 08:56:31 +0000", 
+    "categories": [
+        "Python"
+    ]
+}
+<strong><a href="http://en.wikipedia.org/wiki/Prospective_search" rel="nofollow">Prospective search</a></strong>, or <strong>persistent search</strong>, is a relatively less common method of implementing search where the list of keywords is defined, and when provided a single document it determines the list of keywords applicable to it.
+
+This is different from traditional (or "retrospective") search, where many documents are stored into an indexed and when provided with a search term, the search engine returns the list of documents which best match the query.
+
+The best real world examples would be how Google News Alerts(or IMHO categorization/clustering in Google News) works. When a new news story is found by Google, it makes more sense to run a prospective search on the news story to find which alert subscriptions (or news category) it belongs to, rather than searching for all the alerts repeatedly on their entire index.
+
+Lucene has a <a href="http://lucene.apache.org/java/2_4_0/api/org/apache/lucene/index/memory/MemoryIndex.html">MemoryIndex</a> class for just this purpose, ive made a simple implementation in python using <a href="http://lucene.apache.org/pylucene/">pylucene</a>. MemoryIndex is a special class in lucene for on-the-fly searching. It can contain only one doccument which may have more than one field. This is ideal for prospective search.
+
+Installation and setup of pylucene is out of scope of this post... <a href="http://lucene.apache.org/pylucene/documentation/install.html">RTFM</a>! (do note u need to edit the MakeFile)
+<pre lang="python">import sys, os, lucene, time, threading
+
+def ProspectiveSearch(body, terms):
+    lucene.initVM(lucene.CLASSPATH)
+    index = lucene.MemoryIndex()
+    index.addField("content", body, lucene.StandardAnalyzer())
+    parser = lucene.QueryParser("content", lucene.StandardAnalyzer())
+    matches = []
+    for term in terms:
+        score=index.search(parser.parse(term))
+        if score &gt; 0:
+            matches += [term]
+    return matches</pre>
+sample usage :-
+<pre lang="python">body = "hi my name is sajal kayan"
+terms = ["sajal", "good", "boy", "name", "sajal AND NOT kayan", "sajal AND kayan"]
+matches = ProspectiveSearch(body, terms)</pre>
+In this case returns ['sajal', 'name', 'sajal AND kayan']
+
+Note:initVM() is <a href="http://stackoverflow.com/questions/548493/jcc-initvm-doesnt-return-when-modwsgi-is-configured-as-daemon-mode">giving problems</a> on mod_wsgi
+
+On my computer, this is the benchmark i noticed for a 244 word content.
+<ul>
+	<li>1,492 queries : 0.79 seconds (for whole script only 248ms for the search loop)</li>
+	<li>14,920 queries : 1.519 seconds</li>
+	<li>74,600 queries : 3.425 seconds</li>
+	<li>149,200 queries : 5.552 seconds</li>
+	<li>298,400 queries : 10.328 seconds</li>
+</ul>
+If you know a better method to achieve prospective search in python do let me know. Would also be interested to know if any RPC based search software does this.

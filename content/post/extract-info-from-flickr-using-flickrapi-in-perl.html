@@ -1,0 +1,89 @@
+{
+    "tags": [
+        "api", 
+        "flickr", 
+        "lightbox", 
+        "perl", 
+        "yahoo"
+    ], 
+    "url": "/extract-info-from-flickr-using-flickrapi-in-perl.html", 
+    "title": "Extract info from flickr using Flickr::API in Perl", 
+    "draft": false, 
+    "date": "Sat, 01 Mar 2008 18:09:21 +0000", 
+    "categories": [
+        "perl"
+    ]
+}
+Today i learnt a neat trick. It it took me more time to make the script than it would have taken me to do the task manually.. the old fashioned way.. but it would save me(and hopefully you) a lot of time in the future. <a href="http://www.flickr.com/services/api/" title="Flickr API">Flickr does have a nice API</a> with many methods, almost everything which can be done via flickr website can be done using this API. You would need to have a <a href="http://www.flickr.com/services/api/keys/">Flickr API key</a> to use this script.
+
+The objective : To generate some html code based on the images in <a href="http://www.flickr.com/photos/sajalkayan/sets/72157604016439437/" title="Indian Ambassador visits 41st Bangkok Gems &amp; Jewelry Fair " target="_blank">one particular set</a> in my <a href="http://www.flickr.com/photos/sajalkayan/" target="_blank">flickr account</a> and to <a href="http://www.thaindian.com/news-snippet/the-indian-ambassador-visits-bangkok-gems--jewelry-fair-feb-2008-4649.html" title="http://www.thaindian.com/news-snippet/the-indian-ambassador-visits-bangkok-gems--jewelry-fair-feb-2008-4649.html" target="_blank">display them</a> in a nice manner(well better than earlier ;) ) using <a href="http://www.huddletogether.com/projects/lightbox2/" target="_blank">Lightbox2</a>
+
+I am not going to go into details on how to use Lightbox. <a href="http://www.huddletogether.com/projects/lightbox2/" title="Lightbox2 instructions">This page</a> is detailed enough.<!--more-->
+
+The perl script which gets the photo details and generates the HTML :-
+<pre lang="perl">#!/usr/bin/perl
+use Flickr::API;
+#use XML::Simple;
+use Data::Dumper;
+use XML::Parser::Lite::Tree::XPath;
+
+use warnings;
+#use strict;
+
+my $api = new Flickr::API({'key' =&gt; 'YOUR_API_KEY'}); #Get your own!!!
+
+my $response = $api-&gt;execute_method('flickr.photosets.getPhotos', {
+'photoset_id' =&gt; '72157604016439437', #enter required set id here
+});
+#  print Dumper($response);
+#print $response-&gt;{ '_content' };
+
+my $xpath = new XML::Parser::Lite::Tree::XPath($response-&gt;{tree});
+my @photos = $xpath-&gt;select_nodes('/photoset/photo');
+
+foreach (@photos) {
+# flickr image url format : http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{secret}_[mstb].jpg
+
+$thumb = "http://farm$_-&gt;{attributes}-&gt;{farm}.static.flickr.com/$_-&gt;{attributes}-&gt;{server}/$_-&gt;{attributes}-&gt;{id}_$_-&gt;{attributes}-&gt;{secret}_m.jpg";
+$image= "http://farm$_-&gt;{attributes}-&gt;{farm}.static.flickr.com/$_-&gt;{attributes}-&gt;{server}/$_-&gt;{attributes}-&gt;{id}_$_-&gt;{attributes}-&gt;{secret}.jpg";
+
+print "&lt;a href=\"$image\" rel=\"lightbox[fair]\" title=\"$_-&gt;{attributes}-&gt;{title}\"&gt;&lt;img src=\"$thumb\" border=\"0\" hspace=\"5\" vspace=\"5\"&gt;&lt;/a&gt;\n";
+}</pre>
+The HTML output of this script :-
+<pre lang="html">&lt;a href="http://farm4.static.flickr.com/3248/2301055721_7a695b5b79.jpg" rel="lightbox[fair]" title="HE Arrives at Impact"&gt;&lt;img src="http://farm4.static.flickr.com/3248/2301055721_7a695b5b79_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2346/2301054265_f3e7a2e539.jpg" rel="lightbox[fair]" title="HE Arrives at Impact"&gt;&lt;img src="http://farm3.static.flickr.com/2346/2301054265_f3e7a2e539_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2086/2301052523_614291d39f.jpg" rel="lightbox[fair]" title="HE Arrives at Impact"&gt;&lt;img src="http://farm3.static.flickr.com/2086/2301052523_614291d39f_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3203/2301050911_da68c89d63.jpg" rel="lightbox[fair]" title="HE Arrives at Impact"&gt;&lt;img src="http://farm4.static.flickr.com/3203/2301050911_da68c89d63_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3073/2301048901_455600cd48.jpg" rel="lightbox[fair]" title="HE Arrives at Impact"&gt;&lt;img src="http://farm4.static.flickr.com/3073/2301048901_455600cd48_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3202/2301839852_565c82b82d.jpg" rel="lightbox[fair]" title="HE Arrives at Impact"&gt;&lt;img src="http://farm4.static.flickr.com/3202/2301839852_565c82b82d_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2167/2301838056_fb84e7bb5e.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm3.static.flickr.com/2167/2301838056_fb84e7bb5e_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2166/2301836304_f11b5f2bc3.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm3.static.flickr.com/2166/2301836304_f11b5f2bc3_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3230/2301834582_6c3f4ca71c.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm4.static.flickr.com/3230/2301834582_6c3f4ca71c_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2077/2301832676_ca32e4eb11.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm3.static.flickr.com/2077/2301832676_ca32e4eb11_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2159/2301831216_a8a1da1365.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm3.static.flickr.com/2159/2301831216_a8a1da1365_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2231/2301036165_29cbc3dd3c.jpg" rel="lightbox[fair]" title=""&gt;&lt;img src="http://farm3.static.flickr.com/2231/2301036165_29cbc3dd3c_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2214/2301827924_1de12ef380.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm3.static.flickr.com/2214/2301827924_1de12ef380_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3074/2301826874_a595a19957.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm4.static.flickr.com/3074/2301826874_a595a19957_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3079/2301032457_32f39cc0d7.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm4.static.flickr.com/3079/2301032457_32f39cc0d7_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2382/2301824634_6ba7b41bd2.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm3.static.flickr.com/2382/2301824634_6ba7b41bd2_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3250/2301030191_436d6e5a95.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm4.static.flickr.com/3250/2301030191_436d6e5a95_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3139/2301822602_66382566ae.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm4.static.flickr.com/3139/2301822602_66382566ae_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2195/2301821596_88c3278dcc.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm3.static.flickr.com/2195/2301821596_88c3278dcc_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3021/2301027405_176f9aeda9.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm4.static.flickr.com/3021/2301027405_176f9aeda9_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2295/2301026337_a3942dbfa0.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm3.static.flickr.com/2295/2301026337_a3942dbfa0_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2384/2301818564_5405f3573e.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm3.static.flickr.com/2384/2301818564_5405f3573e_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2186/2301817466_4abc7faf6a.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm3.static.flickr.com/2186/2301817466_4abc7faf6a_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3191/2301022991_875e882e8d.jpg" rel="lightbox[fair]" title="Gemopolis Booth"&gt;&lt;img src="http://farm4.static.flickr.com/3191/2301022991_875e882e8d_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3106/2301815264_0ae648e6eb.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm4.static.flickr.com/3106/2301815264_0ae648e6eb_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3184/2301020869_bcb0ea306b.jpg" rel="lightbox[fair]" title="Diamrusa"&gt;&lt;img src="http://farm4.static.flickr.com/3184/2301020869_bcb0ea306b_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2375/2301019793_13fcc79fb9.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm3.static.flickr.com/2375/2301019793_13fcc79fb9_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3036/2301018549_fa84634000.jpg" rel="lightbox[fair]" title="dsc_1007"&gt;&lt;img src="http://farm4.static.flickr.com/3036/2301018549_fa84634000_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2043/2301810588_c16813e905.jpg" rel="lightbox[fair]" title="dsc_1008"&gt;&lt;img src="http://farm3.static.flickr.com/2043/2301810588_c16813e905_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3029/2301809450_cda4274ff8.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm4.static.flickr.com/3029/2301809450_cda4274ff8_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2121/2301808382_427d245157.jpg" rel="lightbox[fair]" title="Indian-Thai Diamond and Colorstone Association"&gt;&lt;img src="http://farm3.static.flickr.com/2121/2301808382_427d245157_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3040/2301807152_271d73d751.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm4.static.flickr.com/3040/2301807152_271d73d751_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2003/2301012603_064325c351.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm3.static.flickr.com/2003/2301012603_064325c351_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2262/2301804766_3b4a195f35.jpg" rel="lightbox[fair]" title="dsc_1017"&gt;&lt;img src="http://farm3.static.flickr.com/2262/2301804766_3b4a195f35_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3073/2301803616_3f355973a6.jpg" rel="lightbox[fair]" title="dsc_1018"&gt;&lt;img src="http://farm4.static.flickr.com/3073/2301803616_3f355973a6_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm4.static.flickr.com/3050/2301802460_7303470fc5.jpg" rel="lightbox[fair]" title="dsc_1019"&gt;&lt;img src="http://farm4.static.flickr.com/3050/2301802460_7303470fc5_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;
+&lt;a href="http://farm3.static.flickr.com/2060/2301800990_86d25eede5.jpg" rel="lightbox[fair]" title="HE visits the Indian Exhibitors"&gt;&lt;img src="http://farm3.static.flickr.com/2060/2301800990_86d25eede5_m.jpg" border="0" hspace="5" vspace="5"&gt;&lt;/a&gt;</pre>

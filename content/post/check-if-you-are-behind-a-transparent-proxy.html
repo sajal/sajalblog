@@ -1,0 +1,67 @@
+{
+    "tags": [], 
+    "url": "/check-if-you-are-behind-a-transparent-proxy.html", 
+    "title": "Check if you are behind a transparent proxy", 
+    "draft": false, 
+    "date": "Tue, 11 Oct 2011 19:38:50 +0000", 
+    "categories": [
+        "Thailand"
+    ]
+}
+Many Asian ISPs do not provide <em>clean</em> internet. They route all HTTP sessions thru a <a href="http://en.wikipedia.org/wiki/Proxy_server#Transparent_proxies">transparent proxy</a>.
+
+Here is a simple way to check if you are behind one.
+
+<pre  style="width:500;overflow-x:scroll;">
+sajal@sajal-laptop:~$ ping -c 4 www.cdnplanet.com
+PING www.cdnplanet.com (107.20.181.99) 56(84) bytes of data.
+64 bytes from ec2-107-20-181-99.compute-1.amazonaws.com (107.20.181.99): icmp_req=1 ttl=42 time=314 ms
+64 bytes from ec2-107-20-181-99.compute-1.amazonaws.com (107.20.181.99): icmp_req=2 ttl=42 time=313 ms
+64 bytes from ec2-107-20-181-99.compute-1.amazonaws.com (107.20.181.99): icmp_req=3 ttl=42 time=312 ms
+64 bytes from ec2-107-20-181-99.compute-1.amazonaws.com (107.20.181.99): icmp_req=4 ttl=42 time=312 ms
+
+--- www.cdnplanet.com ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/mdev = 312.195/313.229/314.137/0.889 ms
+</pre>
+<pre  style="width:500;overflow-x:scroll;">
+sajal@sajal-laptop:~$ ab http://www.cdnplanet.com/
+This is ApacheBench, Version 2.3 <$Revision: 655654 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking www.cdnplanet.com (be patient).....done
+
+
+Server Software:        Apache
+Server Hostname:        www.cdnplanet.com
+Server Port:            80
+
+Document Path:          /
+Document Length:        13084 bytes
+
+Concurrency Level:      1
+Time taken for tests:   0.944 seconds
+Complete requests:      1
+Failed requests:        0
+Write errors:           0
+Total transferred:      13296 bytes
+HTML transferred:       13084 bytes
+Requests per second:    1.06 [#/sec] (mean)
+Time per request:       943.539 [ms] (mean)
+Time per request:       943.539 [ms] (mean, across all concurrent requests)
+Transfer rate:          13.76 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:       21   21   0.0     21      21
+Processing:   922  922   0.0    922     922
+Waiting:      611  611   0.0    611     611
+Total:        944  944   0.0    944     944
+sajal@sajal-laptop:~$ 
+
+</pre>
+
+My ping time to <a href="http://www.cdnplanet.com/">CDN Planet</a> is 312ms, but the connection was established in just 21ms !!!!11!!1
+
+Reasons for doing so involve : Censorship, big brother snooping, caching, <a href="/twitter-logged-me-as-someone-else-privacy-fail.html">hijacking users sessions</a> , and probably more ...

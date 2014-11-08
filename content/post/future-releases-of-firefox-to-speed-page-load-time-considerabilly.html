@@ -1,0 +1,73 @@
+{
+    "tags": [
+        "GAM", 
+        "google ad manager", 
+        "pagespeed", 
+        "site performance"
+    ], 
+    "url": "/future-releases-of-firefox-to-speed-page-load-time-considerabilly.html", 
+    "title": "Future releases of Firefox to speed page load time considerably?", 
+    "draft": false, 
+    "date": "Wed, 20 Jan 2010 14:29:58 +0000", 
+    "categories": [
+        "Webmaster Things"
+    ]
+}
+Living in Thailand has its fair share of disadvantages. The most prominent being bad internet and poor response times. In most cases, the packet shaping, caching and filtering mechanisms use by ISPs do more harm than good. A response from a US server may take anywhere between 100 to 1000 ms extra than it should (not counting the ping lag and server processing overhead, etc). These days, most websites integrate a lot of client side external scripts and APIs, lagging responses make for a horrible user experience.
+
+Especially when within one ad code, I have a default ad code and that too has a default. This means, when an impression is trying to be filled, the ad network decides, if they can fill the impression based on parameters I set or not. If not, then they pass the impression down the chain to another network. It goes on until the end network. In my case the chain is mostly 3 networks. I cant increase it as it results in a poorer user experience.
+
+<img src="/wmt-performance-chart.png" border="0" alt="Google Webmaster Tools" width="500" height="94" />
+
+Recently, Google started showing average response times in <a href="https://www.google.com/webmasters/tools/home?hl=en">Google Webmaster Tools</a> so, Ive started worrying about these things more than I should.
+
+On <a title="Thaindian News" href="http://www.thaindian.com/newsportal/">my site</a>, I have 2 ad blocks(leaderboard, skyscraper and another block which shows up on individual story pages) which load up before the main content page. Recently I moved the ads to Google ad manager which has a <a href="http://www.google.com/support/admanager/bin/answer.py?hl=en&amp;answer=94394">wonderful way of debugging ad loading</a> by adding ?google_debug to the end of the URL.
+
+My first impression of <a href="https://www.google.com/admanager">Google ad manager</a> was excellent. My page was no more held up while the ads loaded, but soon I realized thats not an admanager feature, it is <strong>firefox 3.5.8pre</strong> which is speeding things up.
+
+<a rel="lightbox" href="/ff-3.5.8pre-ubuntu-big.png"> <img src="/ff-3.5.8pre-ubuntu.png" alt="" /></a>
+
+Browsers Useragent : <em>Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.8pre) Gecko/20100116 Ubuntu/9.04 (jaunty) Shiretoko/3.5.8pre</em> (Click image for full screenshot)
+
+My tests on my laptop shows otherwise. (it runs 3.0.17).
+
+<a rel="lightbox" href="/ff-3.0-ubuntu-big.png"> <img src="/ff-3.0-ubuntu.png" alt="" /></a>
+
+Browsers Useragent: <em>Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.0.16) Gecko/2009121601 Ubuntu/9.04 (jaunty) Firefox/3.0.17</em> (Click on image for full screenshot)
+
+This does not speed up much on Chrome or IE too... They all show that the "Time the page is blocked fetching ads from Google" to range between 1000ms to 2500ms. The variation is irrelevant its due to network issues and ad server response times. But the bottom line is that these browsers do hold up the page while the ads load.
+
+Maybe this is an improvement in the latest Ubuntu nightly build or a general improvement, whatever it is, the future is <a href="http://www.getfirefox.com/">Firefox</a> and they are <a href="http://www.mozilla.com/en-US/firefox/fastest/">fast</a>!
+
+So far, there has been no proper way to load ads such that they don't block the rest of the page from loading. The 2 ways i know of are very ugly and I don't like them :-
+<ol>
+	<li>Load the target adscript from a separate HTML file loaded via iframe - costs one extra request/ad code, may screw up ad targeting, etc.</li>
+	<li>Place a blank hidden div in place of ad, load the ad in a hidden div below the actual content and then using javascript trickery swap contents of the hidden div with this ad div. - sounds ugly again. not a neat solution.</li>
+</ol>
+Of course there is a neat and ideal solution... which is to make your template in such a way(CSS absolute positioning or something) such that the HTML of the content appears before in the code than the ad javascript... but again this is cumbersome. <a href="http://www.google.com/support/forum/p/Google+Ad+Manager/thread?tid=4e3c789b45f46902&amp;hl=en">Interesting discussion here</a>.
+
+In an ideal world, all ad networks would be banned from using <em>document.write</em> in their scripts and use some form of ajax to call the banner code after(or during) rest of the page has loaded. Its not 2001 anymore!
+
+Here is what I request from you, open the following URL <a href="http://www.thaindian.com/newsportal/?google_debug">http://www.thaindian.com/newsportal/?google_debug</a> then there should be 1 or 2 popups(maybe some browsers need to disable popup blocker). Look at the popup which resembles the <a rel="lightbox" href="/ff-3.0-ubuntu-big.png">screenshots</a> above, and report your findings in the comments below. Be sure to wait for the main page to complete loading and don't forget to include your full useragent. If you can upload screenshots somewhere then please drop their URLs in comments too.
+
+The info i need, could be like the following example:-
+
+<em>User Agent: Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.8pre) Gecko/20100116 Ubuntu/9.04 (jaunty) Shiretoko/3.5.8pre
+Debug: -
+7342	Information  	Time the page is blocked fetching ads from Google 0 ms
+7343	Information  	Time the page is blocked rendering ads from Google 0 ms</em>
+Your useragent can be checked <a href="http://whatsmyuseragent.com/">here</a>.
+
+Video of pageload on Google Chrome:-
+<object width="480" height="385"><param name="movie" value="http://www.youtube.com/v/M6B9t2tbwx0&hl=en_US&fs=1&"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/M6B9t2tbwx0&hl=en_US&fs=1&" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"></embed></object>
+
+Video of pageload on Firefox 3.6pre(Ubuntu build):-
+<object width="480" height="385"><param name="movie" value="http://www.youtube.com/v/4SIMl8IEZsg&hl=en_US&fs=1&"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/4SIMl8IEZsg&hl=en_US&fs=1&" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"></embed></object>
+
+<strong>UPDATE</strong>: I upgraded my main browser to Firefox 3.6 (Your User Agent: Mozilla/5.0 (<em>X11; U; Linux x86_64; en-US; rv:1.9.2pre) Gecko/20100120 Ubuntu/9.04 (jaunty) Namoroka/3.6pre</em>) same results as 3.5.8pre its bloody fast and doesn't stall the pageload waiting for ads.
+
+<strong>UPDATE 2:</strong> Based on comment by Archit below, the speed improvement is not visible on 3.6rc2 . My conclusions are based on the nightly builds by the <a href="https://launchpad.net/~ubuntu-mozilla-daily">Ubuntu Mozilla Daily Build Team</a>
+
+<strong>UPDATE 3:</strong> Added videos
+
+<strong>UPDATE 4:</strong> For my site I implemented the hidden div trick, so for now, all browsers will not notice the visual delay.

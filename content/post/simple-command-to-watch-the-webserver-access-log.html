@@ -1,0 +1,36 @@
+{
+    "tags": [], 
+    "url": "/simple-command-to-watch-the-webserver-access-log.html", 
+    "title": "Simple command to \"watch\" the webserver access log", 
+    "draft": false, 
+    "date": "Fri, 02 Apr 2010 14:34:16 +0000", 
+    "categories": [
+        "Linux", 
+        "Webmaster Things"
+    ]
+}
+I am often curious as to what bots are going on my site at any given moment. So much so that I devote one terminal tab to running this script.
+
+save the following as say bot.sh and make it executable :-
+
+<pre lang="bash">#!/bin/bash
+watch "grep $1 /path/to/access.log | tail -15"</pre>
+note: the number after tail can be adjusted depending on your terminal size...
+
+Run it on the server as :-
+
+<pre lang="shell">[user@server ~]# ./bot.sh Googlebot</pre>
+
+OR
+
+<pre lang="shell">[user@server ~]# ./bot.sh msnbot</pre>
+
+OR
+
+<pre lang="shell">[user@server ~]# ./bot.sh <suspicious ip address></pre>
+
+and so on....
+
+<strong>UPDATE</strong>: Better <a href="/simple-command-to-watch-the-webserver-access-log.html#comment-1039">alternative</a> by <a href="http://whsgroup.ath.cx/">willwill</a>. Save as bot.sh:-
+<pre lang="bash">#!/bin/bash
+watch "tail -f /path/to/access.log | grep $1"</pre>

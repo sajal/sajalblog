@@ -1,0 +1,170 @@
+{
+    "tags": [
+        "disco", 
+        "mapreduce", 
+        "Python"
+    ], 
+    "url": "/disco-ec2-spot-instance-win.html", 
+    "title": "Disco + EC2 spot instance = WIN", 
+    "draft": false, 
+    "date": "Tue, 30 Oct 2012 13:13:59 +0000", 
+    "categories": [
+        "Linux", 
+        "Python"
+    ]
+}
+	<p>tl;dr version : <a href="https://github.com/sajal/disposabledisco">This</a> is how I spent a Saturday evening.</p>
+
+	<p>&lt;blink&gt;<strong>Warning</strong>: If you like to write Java, stop reading now. Go back to using Hadoop. It's a much more mature project.&lt;/blink&gt;</p>
+
+	<p>As a part of my <a href="http://www.turbobytes.com/" title="multi-cdn service">job</a>, I do a lot of number processing. Over the course of last few weeks, I shifted to doing most of it using <a href="http://research.google.com/archive/mapreduce.html">MapReduce</a> using <a href="http://discoproject.org/">Disco</a>. Its a wonderful approach to processing big data where the time to process data is directly proportional to the amount of hardware you throw at it and the quantity of data. The amount of data to be processed can (in theory) be unlimited. While I don't do anything of Google scale, I deal with <em>Small Big Data</em>. My datasets for an individual job would probably not exceed 1 GB. I can currently afford to continue not use MapReduce, but as my data set grows, I would <em>have to</em> do distributed computing, so better start early.</p>
+
+	<h3>Getting started with Disco</h3>
+
+	<p>If you, like me, had given up on MapReduce in the past after trying to deal with administrating Hadoop, now is a great time to look into Disco. Installation is pretty easy. <a href="http://discoproject.org/doc/disco/start/download.html">Follow the docs</a>. Within 5 minutes I was writing Jobs in python to process data, would have been faster if I knew before-hand that SSH daemon should be listening on port 22.</p>
+
+	<p>Python for user scripts + Erlang for backend == match made in heaven</p>
+
+	<h3>Enter disposable Disco</h3>
+
+	<p>I made a <a href="https://github.com/sajal/disposabledisco">set of python scripts</a> to launch and manage Disco clusters on EC2 where there is no need for any data to be stored. In my usecase, the input is read from Amazon S3 and output goes back into S3.
+
+	<p>There are some issues with running disco on EC2.</p>
+
+	<ul>
+		<li>Must have ssh/keys setup such that Master can ssh into slaves.</li>
+		<li>Must have a file with <em>erlang cookie</em> with same contents on all slaves</li>
+		<li>Must inform master the <em>hostnames</em> of the slaves. FQDN or anything with a dot gets rejected</li>
+		<li>The default root directories have very limited storage space, usually 8GB</li>
+	</ul>
+
+	<p>disposabledisco takes care of the above things and more. Everything needed to run the cluster is defined in a config file. First generate a sample config file.</p>
+
+	<pre>
+python create_config.py > config.json
+	</pre>
+
+	<p>This creates a new file with some pre-populated values. For my case the config file looks like this(some info masked)</p>
+
+	<pre style="width:500;overflow-x:scroll;">
+{
+    "AWS_SECRET": "SNIPPED", 
+    "ADDITIONAL_PACKAGES": [
+        "git", 
+        "libwww-perl", 
+        "mongodb-clients", 
+        "python-numpy", 
+        "python-scipy", 
+        "libzmq-dev", 
+        "s3cmd", 
+        "ntp", 
+        "libguess1", 
+        "python-dnspython", 
+        "python-dateutil", 
+        "pigz"
+    ], 
+    "SLAVE_MULTIPLIER": 1, 
+    "PIP_REQUIREMENTS": [
+        "iso8601",
+        "pygeoip"
+    ], 
+    "MASTER_MULTIPLIER": 1, 
+    "MGMT_KEY": "ssh-rsa SNIPPED\n", 
+    "SECURITY_GROUPS": ["disco"], 
+    "BASE_PACKAGES": [
+        "python-pip", 
+        "python-dev", 
+        "lighttpd"
+    ], 
+    "TAG_KEY": "disposabledisco", 
+    "NUM_SLAVES": 30, 
+    "KEY_NAME": "SNIPPED", 
+    "AWS_ACCESS": "SNIPPED", 
+    "INSTANCE_TYPE": "c1.medium", 
+    "AMI": "ami-6d3f9704", 
+    "MAX_BID": "0.04",
+    "POST_INIT": "echo \"[default]\naccess_key = SNIPPED\nsecret_key = SNIPPED\" > /tmp/s3cfg\ncd /tmp\ns3cmd -c /tmp/s3cfg get s3://SNIPPED/GeoIPASNum.dat.gz\ns3cmd -c /tmp/s3cfg get s3://SNIPPED/GeoIP.dat.gz\ns3cmd -c /tmp/s3cfg get s3://SNIPPED/GeoLiteCity.dat.gz\ns3cmd -c /tmp/s3cfg get s3://SNIPPED/GeoIPRegion.dat.gz\ngunzip *.gz\nchown disco:disco *.dat\n\n"
+}
+	</pre>
+
+	<p>This tells disposabledisco that I want a cluster with 1 master and 30 slaces all of type <em>c1.medium</em>, and use <em>ami-6d3f9704</em> as the starting point. It lists out the packages to be installed via apt-get and python dependencies to be installed using PIP. You can link to external tar, git repo, etc. Basically anything pip allows after <em>pip install</em></p>
+
+	<p>The <em>POST_INIT</em> portion is bash script that runs as root after rest of the install. In my case I am downloading and uncompressing different GeoIP databases archived in a S3 bucket for use from within disco jobs.</p>
+
+	<p>Once the config file is ready run the following command many times. The output is fairly verbose.</p>
+
+	<pre>
+python create_cluster.py config.json
+	</pre>
+
+	<p>Why many times? Cause there is no state stored in the system. All state is managed using EC2 tags. This is what the script does on each run</p>
+
+	<ul>
+		<li>Check if master is running. If not request a spot instance for it (and kill any zombie slaves lying around from previous runs).</li>
+		<li>
+			If master us up and running.
+			<ul>
+				<li>Print the ssh command needed to setup port forwarding. After running the given ssh command you can see http://localhost:8090 on the browser to see disco's UI in all its glory.</li>
+				<li>print the command to export DISCO_PROXY so you can create jobs locally</li>
+				<li>Check inventory of slaves. A slave can have 3 statuses. 1) <em>pending</em> - spot instance requested. 2) <em>running</em> - the instance is running. 3) <em>bootstrapped</em> - slave is completely setup and can be added to master.</li>
+				<li>If total number of slaves is less than <em>NUM_SLAVES</em> launch the remaining</li>
+				<li>Try and bootstrap any <em>running</em> instances. If bootstrap was successful, change the EC2 tag.</li>
+			</ul>
+		</li>
+		<li>Finally, update the master's disco config. Telling it hostnames of instances to use and number of workers.</li>
+		<li>???</li>
+		<li>Profit</li>
+	</ul>
+
+<img src="http://i.ticdn.com/sajal/disco-cluster-small.png" width="500" height="377" alt="Cloudwatch showing 31 instances" title="Cloudwatch showing 31 instances" />
+
+	<p>Many steps involve EC2 provisioning spot instances, waiting for instance to get initialized, etc..</p>
+
+	<p>To help with shipping output to S3, I made some output classes for Disco</p>
+
+	<ul>
+		<li><a href="https://gist.github.com/3919506">S3Output</a> - Each key, value returned creates a new file in S3 with the key as S3 key and value as String thats dumped inside it. So, one key should be yielded only once from reduce.</li>
+		<li><a href="https://gist.github.com/3975607">S3LineOutput</a> Similar to S3Output, but now it stores the output, and joins the output as one big file. has options for sorting, unique, etc. </li>
+	</ul>
+
+	<p>Both these functions can be configured gzip the contents before uploading.</p>
+
+	<p>As far as input is concerned, I send it a list of signed S3 urls. (Sidenote: It seems disco cannot handle https inputs at the moment, so I use http). A sample job run might look like.. </p>
+
+	<pre style="width:500;overflow-x:scroll;">
+def get_urls():
+    urls = []
+    for k in bucket.list(prefix="processed"):
+        if k.name.endswith("gz"):
+            urls += [k.generate_url(3660).replace("https", "http")]
+    return urls
+
+MyExampleJob().run(
+	input=get_urls(),
+	params={
+		"AWS_KEY": "SNIP",
+		"AWS_SECRET": "SNIP",
+		"BUCKET_NAME": "SNIP",
+		"gzip": True
+	},
+	partitions=10,
+	required_files=["s3lineoutput.py"],
+	reduce_output_stream=s3_line_output_stream
+	).wait()
+
+	</pre>
+
+	<p>Bonus - <a href="https://gist.github.com/3941935">MagicList</a> - Memory efficient way to store and process potentially infinite lists.</p>
+
+	<p>We used Disco to compute numbers for a series of blogposts on <a href="http://www.cdnplanet.com/">CDN Planet</a>. For this analysis it was painful process for me to manually launch Disco clusters, which lead me to create the helper scripts.</p>
+	<ul>
+		<li>Part 1 : <a href="http://www.cdnplanet.com/blog/google-dns-opendns-and-cdn-performance/">Google DNS, OpenDNS and CDN performance</a></li>
+		<li>Part 2 : <a href="http://www.cdnplanet.com/blog/which-cdns-support-edns-client-subnet/">Which CDNs support edns-client-subnet?</a></li>
+		<li>Part 3 : <a href="http://www.cdnplanet.com/blog/real-world-cdn-performance-googledns-opendns-users/">Real-world CDN performance for Google DNS and OpenDNS users</a></li>
+	</ul>
+
+	<h3>Shameless plug</h3>
+
+	<a href="http://www.turbobytes.com/"><strong>Turbobytes, multi-CDN made easy</strong></a>
+
+	<p>Have your static content delivered by 6 global content delivery networks, not just 1. Turbobytes' platform closely monitors CDN performance and makes sure your content is always delivered by the fastest CDN, automatically.</p>

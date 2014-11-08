@@ -1,0 +1,105 @@
+{
+    "tags": [
+        "DFP", 
+        "google", 
+        "site performance"
+    ], 
+    "url": "/optimizing-dfp-performance.html", 
+    "title": "Optimizing DFP performance", 
+    "draft": false, 
+    "date": "Fri, 10 Sep 2010 18:09:35 +0000", 
+    "categories": [
+        "Webmaster Things"
+    ]
+}
+Ive been using <a href="https://www.google.com/dfp/">DFP</a> (DoubleClick for Publishers - formerly Google Ad Manager) to serve ads as it has some certain features I really need.
+
+The downside of using DFP is that its browser side performance sucks big time. On my site, I use the experimental Iframe tagging, which basically writes an iframe in place of the ad and loads the third party ad codes into it. This runs asynchronously and is nice, but the DFP's bootstrap javascript blocks rendering and it needs to load 3 javascript files from Google serially. This bootstrap must be available before trying to fill an ad slot.
+
+<h3>The Goal</h3>
+
+Show the story title and body to the user As Soon As Possible
+
+<h3>The Problem</h3>
+
+The instructions of implementing the Iframe tagging is as such.
+
+In the &lt;head&gt;...&lt;/head&gt; section :-
+
+<code lang="html">
+&lt;!-- PUT THIS TAG IN THE head SECTION --&gt;
+&lt;script src="http://partner.googleadservices.com/gampad/google_service.js" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+GS_googleAddAdSenseService("ca-pub-xxxxxxxxxxxxxxxx"); 
+GS_googleEnableAllServices();
+&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+GA_googleUseIframeRendering();
+&lt;/script&gt;
+&lt;!-- END OF TAG FOR head SECTION --&gt;
+</code>
+
+And where the ad slot needs to be displayed always in the &lt;body&gt;...&lt;/body&gt;:-
+
+<code lang="html">
+&lt;script type="text/javascript"&gt;
+GA_googleFillSlotWithSize("ca-pub-xxxxxxxxxxxxxxxx", "slot_name", 728, 90);
+&lt;/script&gt;
+</code>
+
+The resulting waterfall chart of this method :-
+
+<img src="http://i.ticdn.com/sajal/dfp-before.png" alt="DFP before" height="240" width="404" />
+
+Requests #3, #4 and #5 is the bootstrap for DFP. The green line indicates the first paint event.
+
+It is clear that 
+<ol>
+	<li>The browser needs to make 3 sequential requests</li>
+	<li>Until these 3 javascripts are downloaded and parsed, the rendering cannot begin. - The user is affectively staring at a blank screen.</li>
+	<li>The browser is doing nothing else while downloading these files.</li>
+</ol>
+
+<h3>The Workaround</h3>
+
+I was going to mark this section as a "solution" to the problem... but it isint. The page is still susceptible to <a href="http://www.stevesouders.com/blog/2010/06/01/frontend-spof/">frontend SPOF</a> .. That is if the servers hosting the DFP JavaScripts is unaccessible, that calls for a terrible user experience on my site.
+
+What I did was simply moved the bootstrap to just before the first time the <em>GA_googleFillSlotWithSize()</em> function was called. i.e. move the bootstrap from the &lt;head&gt; to the &lt;body&gt; part of the page.
+
+The waterfall chart for this is :-
+
+<img src="http://i.ticdn.com/sajal/dfp-after.png" alt="DFP after" height="223" width="472" />
+
+Requests #3, #7 and #8 is the bootstrap for DFP. The green line indicates the first paint event.
+
+It is clear that 
+<ol>
+	<li>The browser still needs to make 3 sequential requests</li>
+	<li>While the bootstrap was loading, the user can see the header of the site, providing visual feedback that something is happening. - The <em>start render</em> did not have to wait.</li>
+	<li>The browser is downloading images, etc referred to earlier while downloading the bootstrap.</li>
+	<li>There is 200ms improvement in the time at which the user can start reading the story.</li>
+</ol>
+
+Here is a video comparing the 2 loading methods :-
+
+<object width="480" height="295"><param name="movie" value="http://www.youtube.com/v/YF9-Us8xAVM?fs=1&amp;hl=en_US"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/YF9-Us8xAVM?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="295"></embed></object>
+
+If anyone has better ways to embed DFP, please let me know via comments below.
+
+<h3>The Solutions</h3>
+
+There are 2 ways to solve this
+<ul>
+	<li>Have source ordered HTML where the adcodes are always after the content in the HTML source of the page. This ensures that the user can start reading while DFP does its blocking thing. - A site redesign is in planning and that would implement this step.</li>
+	<li>DFP changes the way it works... by replacing the evil document.write with DOM manipulation techniques so the scripts can be loaded asynchronously.</li>
+</ul>
+
+So next time if a third party script provider tells you that certain code <strong>must</strong> be in the &lt;head&gt; of the HTML, don't believe them and question them.
+
+PS: All tests were done from ie7 from Dulles, VA using <a href="http://www.webpagetest.org/">WebPageTest.org</a>, ie8 also showed similar behavior.
+
+<h3>Shameless Plug</h3>
+I am available for <a href="/web-speed-consulting-services">consulting on web speed issues</a>, contact details in the right sidebar.
+
+<strong>UPDATE: I am now using <a href="http://www.aaronpeters.nl/blog/non-blocking-google-adsense-ads-improve-page-speed">Aaron's adsense hack</a> to defer DFP below the content. Thanks Aaron</strong>
+<strong>UPDATE 2: New Post: <a href="/complete-asynchronous-ad-loading-using-dfp-and-labjs.html">Complete Asynchronous ad loading using DFP and LABjs</a></strong>

@@ -1,0 +1,113 @@
+{
+    "tags": [
+        "DFP", 
+        "google", 
+        "google ad manager", 
+        "site performance"
+    ], 
+    "url": "/complete-asynchronous-ad-loading-using-dfp-and-labjs.html", 
+    "title": "Complete Asynchronous ad loading using DFP and LABjs", 
+    "draft": false, 
+    "date": "Wed, 02 Mar 2011 18:43:51 +0000", 
+    "categories": [
+        "Webmaster Things"
+    ]
+}
+UPDATE: The hack is now available on <a href="https://github.com/sajal/async-DFP-ads">GitHub</a>.
+
+<strong>8th May 2011: This seems to be having problems, will investigate and update when i have time. Pls revert to normal DFP tags for now.</strong>
+
+One of the biggest challenges when optimizing performance of websites is third party content - specifically advertisements.
+
+Most ad networks and servers use evil document.write() in their JavaScript(and even nested document.writes) which block further rendering of the page until their code has completed execution. In this blogpost, I'll show how you can use <a href="http://www.google.com/support/dfp_sb/bin/answer.py?hl=en&answer=90777">DFP's iframe tagging</a>(read warnings there) combined with <a href="http://labjs.com/" title="Loading And Blocking JavaScript">LABjs</a> and little bit of JavaScript hackery to make any ad load asynchronously with negligible impact on rest of the pageload.
+
+Attention Deficit Disorder version : <a href="/tests/dfp-iframe-tagging.html" target="_blank">Before</a> - <a href="/tests/dfp-async-LABjs.html" target="_blank">After</a>
+
+NOTE: Use the method below entirely at your own risk! Use only if you know what you are doing...
+
+<h3>Current blocking method</h3>
+
+DFP has an experimental method to load ads called iframe tagging. The JS looks like this :-
+
+The Bootstrap: In &lt;head&gt; (Does not have to be in &lt;head&gt; but before the first <em>GA_googleFillSlotWithSize</em> call) :-
+<pre style="width:500;overflow-x:scroll;">
+&lt;script type='text/javascript' src='http://partner.googleadservices.com/gampad/google_service.js'&gt;
+&lt;/script&gt;
+&lt;script type='text/javascript'&gt;
+GS_googleAddAdSenseService("ca-pub-7046344781760701");
+GS_googleEnableAllServices();
+&lt;/script&gt;
+&lt;script type='text/javascript'&gt;
+GA_googleUseIframeRendering();
+&lt;/script&gt;
+</pre>
+
+Then wherever we want the ads to display, we put something like this :-
+
+<pre style="width:500;overflow-x:scroll;">
+&lt;script type='text/javascript'&gt;
+GA_googleFillSlotWithSize("ca-pub-7046344781760701", "test_async_lb", 728, 90);
+&lt;/script&gt;
+</pre>
+
+With this method, the bootstrap does some blocking. First it loads a JavaScript then the following functions document.write another &lt;script&gt; tag which must load sequentially again. The <em>GA_googleFillSlotWithSize</em> function is relatively inexpensive. All it seems to do is document.write an iframe with various targeting information as parameters in the URL and does not block further rendering. The advantage of iframe tagging is that slow ad networks don't fuck up your page. But the bootstrap is very expensive as shown in this waterfall chart.
+
+<a href="/tests/dfp-iframe-tagging.html" target="_blank">This</a> is what it looks like.
+
+<img src="http://i.ticdn.com/sajal/dfp-async/normal.png" alt="normal DFP iframe bootstrap" title="normal DFP iframe bootstrap" height="186" width="485" />
+
+<h3>The hack</h3>
+
+Last few days, I've been playing a little with <a href="http://labjs.com/" title="Loading And Blocking JavaScript">LABjs</a>, specifically its <a href="http://gist.github.com/603980" title="Snippet to load LABjs itself dynamically">complete async loader</a>.
+
+After playing with LABjs, ive come up with the following LABjs snippet :-
+
+<pre style="width:500;overflow-x:scroll;">
+      // intercepts the script inserted via document.write and loads it via LABjs
+      function docwrt(str){
+        var script = str.replace(/(.*)\=\"/g, '').replace(/\"(.*)/g, '');
+        $LAB.script(script).wait(function(){
+          GA_googleUseIframeRendering();
+          // following function makes the magic happen!
+          function Wrapper_googleFillSlotWithSize(pubid, slotname, width, height, target){
+            var docwrttemp = function(str){
+              target = document.getElementById(target);
+              target.innerHTML = str;
+            };  
+            document.write = docwrttemp;
+            GA_googleFillSlotWithSize(pubid, slotname, width, height);
+          }
+          // usage of the new wrapper here "leaderboard" and "skyscraper" are target div ids
+          Wrapper_googleFillSlotWithSize("ca-pub-7046344781760701", "test_async_lb", 728, 90, "leaderboard");
+          Wrapper_googleFillSlotWithSize("ca-pub-7046344781760701", "test_async_sky", 160, 600, "skyscraper");
+        });
+      }
+
+      document.write = docwrt; //intercepts document.write from below script
+      $LAB.script("http://partner.googleadservices.com/gampad/google_service.js").wait(function(){
+        GS_googleAddAdSenseService("ca-pub-7046344781760701");
+        GS_googleEnableAllServices();
+      });
+
+</pre>
+
+(note: Since I'm lazy, I haven't restored <em>document.write</em> back to its original glory.)
+
+Here <em>Wrapper_googleFillSlotWithSize</em> is a wrapper around <em>GA_googleFillSlotWithSize</em> which takes a 5th argument - <em>target</em> - This is the id of &lt;div&gt; where we want to show the ad.
+
+<a href="/tests/dfp-async-LABjs.html" target="_blank">Here</a> is a sample page using this hack. Id appreciate it if I get some feedback about this method via comments below. As I said earlier, use your own better judgment before using this snippet in production. I welcome criticism but will not accept blame if this doesn't work for you. 
+
+In my simple example, it may seem it takes longer to fully load the page, but if you have many other things on the page, the overall effect will be better with this hack. Moreover, if you are already using LABjs on your site, this is a no-brainer. With this method, even if Google is inaccessible(for whatever reasons) it wont <a href="http://www.stevesouders.com/blog/2010/06/01/frontend-spof/">SPOF</a> your page.
+
+<a href="http://i.ticdn.com/sajal/dfp-async/video.mp4">Slow motion video</a> of pageloads on IE8:-
+
+<iframe title="YouTube video player" width="500" height="311" src="http://www.youtube.com/embed/Vz2unMmBN_8" frameborder="0" allowfullscreen></iframe>
+Generated via <a href="http://www.webpagetest.org/">webpagetest.org</a>
+
+Left is normal method, right is hacked version.
+
+Currently tested on IE(7 thru 9), Firefox 3.6.11, Chrome 10.0.648.45 dev and an unknown version of Safari.
+
+<h3>Conclusions...</h3>
+
+The world would be a much better place without the evil document.write(). Google should know better. They should make a function like <em>Wrapper_googleFillSlotWithSize</em> by default.

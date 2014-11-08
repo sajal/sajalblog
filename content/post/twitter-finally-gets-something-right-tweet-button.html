@@ -1,0 +1,80 @@
+{
+    "tags": [
+        "site performance", 
+        "Tweet Button", 
+        "twitter"
+    ], 
+    "url": "/twitter-finally-gets-something-right-tweet-button.html", 
+    "title": "Twitter finally gets something right - Tweet Button", 
+    "draft": false, 
+    "date": "Fri, 13 Aug 2010 14:35:42 +0000", 
+    "categories": [
+        "Webmaster Things"
+    ]
+}
+FAILing all the time is not new for Twitter, in fact they are the masters of FAIL. Twitter FAILs so often that seeing the obnoxious FAIL WHALE on a daily basis has become a way of life for most of us. Twitter is so experienced in the art of FAIL, that they are aware and <a href="http://www.youtube.com/watch?v=_7KdeUIvlvw">experienced</a> in causes of FAIL and how to mitigate its effects.
+
+Recently Twitter, for the first time ever, launched the <a href="http://twitter.com/goodies/tweetbutton">official Tweet button</a> which one can put on their websites to allow the user to tweet easily and view the twitter based popularity of the page they are currently reading.
+
+So whats new about this? 3rd providers like <a href="http://tweetmeme.com/">TweetMeme</a> have had this functionality for years now. Let me explain ...
+
+Firstly Twitters implementation of the Button
+
+<code>
+&lt;a href="http://twitter.com/share" class="twitter-share-button" data-count="vertical"&gt;Tweet&lt;/a&gt;
+&lt;script type="text/javascript" src="http://platform.twitter.com/widgets.js"&gt;&lt;/script&gt;
+</code>
+
+Look closely, there is an &lt;a&gt; tag which sets the <em>class</em> attribute, and then a &lt;script&gt; tag, which makes the magic happen. Take a look into their <a href="http://platform.twitter.com/widgets.js" rel="nofollow">JavaScript</a>, there are no nasty <em>document.write</em>s in it. In fact, all it does is look for objects with the <em>twitter-share-button</em> class and then that object accordingly. Now, if the &lt;script&gt; is placed just after &lt;a&gt; as advised by Twitter, the page load blocks while the JavaScript is downloaded and parsed, this in certain cases may drive away impatient users who don't like waiting for stupid buttons to load before they can interact with rest of the page.
+
+Since Twitter's JavaScript doesn't use <em>document.write</em>, the &lt;script&gt; can be included anywhere in the html provided it is after the &lt;a&gt; tag. the ideal position would be to place it just before &lt;/body&gt;. The result, adding this 3rd party widget induces no additional block in the rendering of the page. Implementing the Tweet Button in this manner has negligible impact on pageload.
+
+This is how your page would look.
+
+<code lang="html">
+&lt;html&gt;
+&lt;head&gt;
+[...]
+&lt;/head&gt;
+&lt;body&gt;
+[...]
+&lt;a href="http://twitter.com/share" class="twitter-share-button" data-count="vertical"&gt;Tweet&lt;/a&gt;
+[...]
+&lt;script type="text/javascript" src="http://platform.twitter.com/widgets.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code>
+
+To make it asynchronous, the &lt;script&gt; tag can be implemented as such :-
+
+<code>
+&lt;script id="deferedjs" type="text/javascript"&gt;
+var b = document.createElement('script');
+b.type = 'text/javascript';
+b.src = ('http://platform.twitter.com/widgets.js');
+var a=document.getElementById("deferedjs");
+a.parentNode.insertBefore(b,a);
+&lt;/script&gt;
+</code>
+
+Now thats is truly non-blocking un-intrusive implementation of the button. It doesn't block the <em>onload</em> event uselessly.
+
+Now, Twitter didn't include these methods in the documentation probably because they didn't want to scare away regular bloggers and webmasters who aren't as paranoid about client side performance as some of us.
+
+The Tweet Button uses <a href="http://www.akamai.com/">Akamai CDN</a> to serve the assets, which is considered super stable. Currently sets an expires header of 1 hour (which I presume will be changed to far-future once things stabilize) and to top it off, it provides webmasters with an elegant JavaScript  which can be implemented such that the base page suffers very little(if any) even if their CDN goes down.
+
+More experienced webmasters can even bundle this JavaScript into their own code, provided they regularly track changes and re-bundle often to avoid undesired consequences.
+
+Now, see <a href="http://help.tweetmeme.com/2009/04/06/tweetmeme-button/">TweetMeme's implementation</a> :-
+
+<code>
+&lt;script type="text/javascript" src="http://tweetmeme.com/i/scripts/button.js"&gt;&lt;/script&gt;
+</code>
+
+Just take a look into their <a href="http://tweetmeme.com/i/scripts/button.js" rel="nofollow">JavaScript</a>. It uses a <em>document.write</em> to write an Iframe. The JavaScript has to be downloaded, then parsed, then executed exactly at the moment it needs to be placed in sync with the rendering of the DOM. There is no way that I know of to make this truly asynchronous besides putting their script inside another iframe (which makes one additional request to your server).
+
+TweetMeme hosts the javascript on their own servers, if their server is slow, the whole pageload would suffer. To top it off there is no way where a webmaster can take precautions against it.
+
+My intention was not to single out TweetMeme, almost all 3rd party widgets make their code such that each of them are <a href="http://www.stevesouders.com/blog/2010/06/01/frontend-spof/">frontend SPOF</a> for the websites that use them.
+
+Moral of the story is that it is the responsibility of a 3rd party service providers to make their FAIL shouldn't make their users sites to FAIL completely.

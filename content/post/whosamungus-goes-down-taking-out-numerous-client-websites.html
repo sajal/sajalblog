@@ -1,0 +1,40 @@
+{
+    "tags": [
+        "site performance"
+    ], 
+    "url": "/whosamungus-goes-down-taking-out-numerous-client-websites.html", 
+    "title": "Whos.amung.us goes down taking out numerous client websites", 
+    "draft": false, 
+    "date": "Sun, 12 Sep 2010 17:04:54 +0000", 
+    "categories": [
+        "Webmaster Things"
+    ]
+}
+Realtime web analytics service <a href="http://whos.amung.us/">whos.amung.us</a> has been completely down for at least the last 3 hours (as of sept 12 4:28pm UTC). Thousands of webmasters (myself included) use this widget to gather realtime traffic stats for websites. The current outage has caused big problems to the sites implementing this widget.
+
+Lets look at their widget implementation.
+
+<code lang="html">
+&lt;script type="text/javascript" src="http://widgets.amung.us/small.js"&gt;&lt;/script&gt;&lt;script type="text/javascript"&gt;WAU_small('unique-site-tag')&lt;/script&gt;
+</code>
+This is bad!
+
+The base javascript uses document.write, hence cant be made to load asynchronously. Moreover, they write an <em>img</em> tag into the document which too must be be loaded before the window.onload event can be triggered.
+
+This incident was somehow not critical FAIL for me cause I am aware about <a href="http://www.stevesouders.com/blog/2010/06/01/frontend-spof/">frontend SPOF</a> issues and placed this widget just before &lt;/body&gt;, so it didn't completely mess with my page, but still caused the following problems.
+<ol>
+	<li>Delayed the window.onload event, delaying executing of other scripts made to run after onload.</li>
+	<li>Showed "waiting for .... " in the status bar of the browsers for a long time before timing out, indicating to the user that the page is still not ready.</li>
+	<li>Makes Google think your site is really slow and doesn't deserve to rank!</li></ol>
+
+Now, for webmasters not aware about these issues the problems is possibly critical. In case the widget code is <strong>before</strong> the main content of their site, they are in for a hard time. Their site would stop loading at the point the widget is located in the html, giving the users an impression that the website is <em>broken</em>.
+
+I understand that today is a Sunday, and not all the engineers/OPs can be on standby 100% of the time to fix these issues. Downtime is inevitable, but when you FAIL, don't take your customers/users down with you. Their javascript serving server was still more stable than the server. <a href="http://www.webpagetest.org/result/100912_7b6ecd8e647bd261a200da177953de1a/1/details/">Here is a Webpagetest.org result for my site</a> during the outage. Its the dynamic counter image which SPOF'd.
+
+If they must use document.write, write a div, give it a name, and attach the image into it using dom manipulation <strong>after the window.onload</strong>.
+
+Moreover, when the servers come under high load, there should be a mechanism to FAIL early with an appropriate status code.
+
+Respect your users, don't take them for granted!
+
+<em>Disclaimer: My current secret project is somewhat related to real-time analytics.</em>

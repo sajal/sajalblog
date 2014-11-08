@@ -1,0 +1,33 @@
+{
+    "tags": [
+        "google analytics", 
+        "site performance"
+    ], 
+    "url": "/attention-skeptics-web-performance-optimization-works.html", 
+    "title": "Attention skeptics: Web Performance Optimization works!", 
+    "draft": false, 
+    "date": "Sat, 14 May 2011 14:39:14 +0000", 
+    "categories": [
+        "Monetizing", 
+        "Webmaster Things"
+    ]
+}
+Today, I was looking into web performance issues for a new client who wishes to remain anonymous and saw an interesting example of value provided by improving performance.
+
+One of the first things I do when looking into a new site is look at Google Analytics to understand a little about the sites visitors. This helps in prioritizing changes which affects the majority of users.
+
+An interesting observation :-
+
+<strong>Pageviews for all visitors</strong>
+<a href="http://i.ticdn.com/sajal/page-views.png" target="_blank" title="Pageviews for all visitors"><img src="http://i.ticdn.com/sajal/page-views-s.png" alt="Pageviews for all visitors" /></a>
+
+<strong>Average Pageviews for all visitors</strong>
+<a href="http://i.ticdn.com/sajal/avg-page-views.png" target="_blank" title="Average Pageviews for all visitors"><img src="http://i.ticdn.com/sajal/avg-page-views-s.png" alt="Average Pageviews for all visitors" /></a>
+
+Adsense revenue also followed a similar path. -- Screenshot not available
+
+The reason for this effect was a simple database indexing tweak which sped up the backend performance of a very important action page on the site.
+
+The site in question is a web application where user inputs something and gets some result. It is not a content site where pageview/user could have increased due to some interesting content being added or something. The only change was indexing of a column which should have an index right from the start.
+
+<em>DISCLAIMER: I did not have any role in the above improvement. This was done before my involvement. Perhaps this convinced the client to hire me. Screenshots/info shared with clients permission.</em>

@@ -1,0 +1,70 @@
+{
+    "tags": [
+        "keywords", 
+        "Ruby", 
+        "tags", 
+        "yahoo"
+    ], 
+    "url": "/ruby-class-fetch-suggested-keywords.html", 
+    "title": "Ruby class to fetch suggested keywords", 
+    "draft": false, 
+    "date": "Sun, 03 Aug 2008 22:53:12 +0000", 
+    "categories": [
+        "Ruby", 
+        "Tutorials"
+    ]
+}
+I have recently <a href="http://twitter.com/sajal/statuses/872225824">ditched Perl and fell for Ruby</a>. 
+
+Here is a Ruby class which gets suggested keywords from yahoo API and presents it in a comma separated list. This might be useful for people who use Ruby to upload/edit multiple posts and need to tag them automagically.
+
+This might be awfully simple for the hardcore guys, but for a noob like me, had I come across this example earlier it would have saved me an hour or so. Here it goes...
+
+The Class :-
+<pre lang="ruby"># A ruby class to fetch suggested keywords using Yahoo's term Extraction API
+ require 'rubygems'
+require 'xmlsimple'
+require 'net/http'
+
+class Tagger
+  def content
+    @content
+  end
+  def content=(content)
+    @content = content
+  end
+    def appid
+    @appid
+  end
+  def appid=(appid)
+    @appid = appid
+  end
+  def initialize
+
+  end
+  def fetch
+          url = URI.parse('http://search.yahooapis.com/ContentAnalysisService/V1/termExtraction')
+      post_args = {
+            'appid' =&gt; appid,
+            'context' =&gt; content,
+            'output' =&gt; "xml"
+      }
+      resp1, xml_data = Net::HTTP.post_form(url, post_args)
+      keywords = ""
+      data = XmlSimple.xml_in(xml_data)
+      data['Result'].each do |item|
+      keywords = keywords + item + ", "
+      end
+      return keywords
+  end
+end</pre>
+Download the class <a href="/wp-content/uploads/2008/08/tagger.rb">here</a>
+Sample usage :
+<pre lang="ruby">require 'tagger'
+tagg = Tagger.new
+tagg.appid =     'GO_GET_YOUR_OWN!'
+tagg.content = "The content of the post....."
+puts tagg.fetch</pre>
+
+The appid is available from the <a href="http://developer.yahoo.com/wsregapp/">Yahoo Developer Network</a>
+Limitations : Maximum 5000 queries per day per IP.

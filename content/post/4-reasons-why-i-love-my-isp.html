@@ -1,0 +1,30 @@
+{
+    "tags": [], 
+    "url": "/4-reasons-why-i-love-my-isp.html", 
+    "title": "4 reasons why I love my ISP", 
+    "draft": false, 
+    "date": "Mon, 28 Nov 2011 18:52:26 +0000", 
+    "categories": [
+        "rants", 
+        "Thailand"
+    ]
+}
+<p>I've been using <a href="http://www.truecorp.co.th/">True ADSL</a> for years, and I absolutely love their service (and especially the transparent proxy). Here are some of the reasons why :-</p>
+
+<p><del>Censorship</del> <strong>Protecting me from bad stuff</strong> - Interwebs has a lot of "bad" things out there. My ISP takes good care of me by not letting me access things I am not supposed to see... Even sites not explicitly blocked by court-order. I don't know what I would do without them. My head would probably explode if I saw porn, and my feelings would get hurt if I came across certain types of political messages..</p>
+
+<p><del>Transparent proxy</del> <strong>Web slow down machine</strong> - Buddha <a href="http://thinkexist.com/quotation/the_greatest_prayer_is/165541.html">teaches</a> us <em>"The greatest prayer is patience"</em>. A very special offering of True ISP is that it reminds us to be patient in this fast-paced world. True's Web slow down machine <a href="/check-if-you-are-behind-a-transparent-proxy.html" title="Check if you are behind a transparent proxy">sits between</a> users' connection to other servers. One of its features is to slow down access... It employs several brilliant methods to accomplish this :-
+	<ul>
+		<li>Not keeping connections alive - This is the most important factor in slowing down pageloads. True does not keep connections to remote hosts alive, thus making sure you have to establish a fresh connection with each request to a server overseas. No matter how small the file, a request to the USA will take a minimum 500ms.</li>
+		<li>Making <a href="http://www.cdnplanet.com/blog/tune-tcp-initcwnd-for-optimum-performance/" title="Tuning initcwnd for optimum performance">TCP optimizations</a> useless, since the slow down machine is the one that actually makes connections to remote hosts.</li>
+		<li>Overriding destination IP - True doesn't care about what IP your computer wanted to connect to, your computer could be wrong. It sees the <em>Host</em> header from the request, does its own DNS lookups and routes you to the correct server. Even if you wanted to override this for development, True correctly sends you to production server. True knows development/staging servers are full of bugs, so requests should always go to production.</li>
+		<li>512 kbps upload speed is sufficient for everyone. If you need to upload something big, why not get your lazy ass out, buy a CD and mail it!</li>
+		<li>Sharing is caring - My ISP oversells available bandwidth by a huge margin. Teaches us the importance of sharing</li>
+	</ul>
+</p>
+
+<p><del>Privacy</del> <strong>People impersonator</strong> - Your life is boring? True has a solution! It will <a href="/twitter-logged-me-as-someone-else-privacy-fail.html" title="Twitter logged me as someone else! Privacy FAIL!">automagically log you</a> in as someone else so you can get a glimpse into their exciting lives.</p>
+
+<p><del>Incompetence</del> <strong>Motivator</strong> - Living in Thailand, I am ashamed that I don't read Thai yet, in part due to my own laziness. True gives you an <a href="/truewifinet-big-fail-for-usability.html" title="truewifi.net == big FAIL for usability">incentive</a>.</p>
+
+<small>edited by Michael van Poppel</small>

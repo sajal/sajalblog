@@ -1,0 +1,267 @@
+{
+    "tags": [
+        "Akamai", 
+        "benchmark", 
+        "bind", 
+        "CDN", 
+        "dns", 
+        "google", 
+        "OpenDNS", 
+        "pagespeed", 
+        "site performance", 
+        "Softlayer", 
+        "true"
+    ], 
+    "url": "/in-a-cdnd-world-opendns-is-the-enemy.html", 
+    "title": "In a CDN'd world, OpenDNS is the enemy!", 
+    "draft": false, 
+    "date": "Mon, 17 May 2010 17:19:30 +0000", 
+    "categories": [
+        "Webmaster Things"
+    ]
+}
+While many people are happy with using DNS service providers such as OpenDNS, Google, etc... I will show you here why they may not produce optimal results.
+
+The way most <a href="http://www.cdnplanet.com/">CDNs</a> work is by using DNS routing. When a user attempts to resolve a hostname, the CDN's DNS server responds with an IP which is closest based on the IP address of the requester. A more detailed insight into the workings of a CDN can be found on an earlier post "<a href="/make-your-own-cheap-charlie-cdn.html">Make your own cheap charlie CDN</a>"
+
+For my test here, I tested from the following locations listed below :-
+<ol>
+	<li><a href="http://www.asianet.co.th/">True</a> - Thailand : My personal internet connection provided by the ISP called True Internet.</li>
+	<li><a href="http://www.softlayer.com/">Softlayer</a> - United States : A server hosted at Softlayer's Washington DC Datacenter.</li>
+	<li><a href="http://aws.amazon.com/ec2/">EC2</a> - United States : An EC2 instance at Amazons us-east-1c availability zone.</li>
+	<li><a href="http://aws.amazon.com/ec2/">EC2-EU</a> - Ireland : An EC2 instance at Amazons eu-west-1 availability zone. - Thanks <a href="http://twitter.com/LukeInTH">Luke</a></li>
+	<li><a href="http://aws.amazon.com/ec2/">EC2-APAC</a> - Singapore : An EC2 instance at Amazons ap-southeast-1a availability zone.</li>
+	<li><a href="http://www.comhem.se/">Com Hem</a> - Sweden : An ISP in sweden. - Thanks <a href="http://twitter.com/nadam9">Adam</a></li>
+	<li><a href="http://www.tataindicombroadband.in/">Tata</a> - India : An ISP in India. - Thanks <a href="http://gaeatimes.com/">Angsuman</a></li>
+</ol>
+The following DNS servers were used to resolve the domains :-
+<ol>
+	<li><a href="http://www.opendns.com/">OpenDNS</a> (208.67.222.222 , 208.67.220.220 )- Has different caches in multiple locations(Anycasted) - Chicago, Illinois, USA; Dallas, Texas, USA; Los Angeles, California, USA; Miami, Florida, USA; New York, New York, USA; Palo Alto, California, USA; Seattle, Washington, USA; Washington, DC, USA; Amsterdam, The Netherlands and London, England, UK</li>
+	<li><a href="http://code.google.com/speed/public-dns/">Google Public DNS</a> (8.8.8.8 , 8.8.4.4 ) - "Google Public DNS servers are available worldwide" . I think Google has their DNS servers in all countries where they have hosting infrastructure.</li>
+	<li>Local DNS - The ISP provided DNS in the different locations.</li>
+</ol>
+The test was done to the following CDN providers :-
+<ol>
+	<li><a href="http://www.internap.com/">Internap</a> ( cdn.thaindian.com ) - Uses DNS routing. POPs (Point Of Presence) in the following locations : Atlanta; Boston; Chicago; Dallas; Denver; El Segundo; Houston; Miami; New York; Philadelphia; Phoenix; San Jose; Seattle; Washington, DC; Sydney; Tokyo; Singapore; Hong Kong; Amsterdam; London</li>
+	<li><a href="http://www.akamai.com/">Akamai</a> ( profile.ak.fbcdn.net ) - AFAIK they have a POP in almost all countries including Thailand. Note: Akamai does not entertain sales queries from Thai companies.</li>
+</ol>
+<h3>Results:-</h3>
+1) <strong>Internap</strong> ( using cdn.thaindian.com )
+<table style="font-size: 8pt;" border="1">
+<tbody>
+<tr>
+<th>Location</th>
+<th colspan="2">Opendns</th>
+<th colspan="2">Google</th>
+<th colspan="2">Local</th>
+</tr>
+<tr>
+<th></th>
+<th>IP Returned</th>
+<th>Ping to IP (ms)</th>
+<th>IP Returned</th>
+<th>Ping to IP (ms)</th>
+<th>IP Returned</th>
+<th>Ping to IP (ms)</th>
+</tr>
+<tr>
+<th>True (Thailand)</th>
+<td>64.94.126.65</td>
+<td>256</td>
+<td>74.201.0.130</td>
+<td>365</td>
+<td>203.190.126.131</td>
+<td style="background-color: #ccff99;">152</td>
+</tr>
+<tr>
+<th>Softlayer (US-East Coast)</th>
+<td>69.88.152.250</td>
+<td style="background-color: #ccff99;">1.253</td>
+<td>74.201.0.130</td>
+<td>25.69</td>
+<td>69.88.152.250</td>
+<td>1.388</td>
+</tr>
+<tr>
+<th>EC2 (US-East Coast)</th>
+<td>69.88.152.250</td>
+<td>2.144</td>
+<td>74.201.0.130</td>
+<td>20.229</td>
+<td>69.88.152.250</td>
+<td style="background-color: #ccff99;">2.094</td>
+</tr>
+<tr>
+<th>EC2 (Europe)</th>
+<td>77.242.194.130</td>
+<td>13.331</td>
+<td>64.7.222.130</td>
+<td>159.422</td>
+<td>77.242.194.130</td>
+<td style="background-color: #ccff99;">12.504</td>
+</tr>
+<tr>
+<th>EC2 (Singapore)</th>
+<td>64.94.126.65</td>
+<td>202</td>
+<td>74.201.0.130</td>
+<td>228</td>
+<td>202.58.12.98</td>
+<td style="background-color: #ccff99;">37.260</td>
+</tr>
+<tr>
+<th>Com Hem (Sweden)</th>
+<td>77.242.194.130</td>
+<td>40.035</td>
+<td>64.7.222.130</td>
+<td>189.647</td>
+<td>69.88.148.130</td>
+<td style="background-color: #ccff99;">36.310</td>
+</tr>
+<tr>
+<th>Tata (India)</th>
+<td>64.7.222.130</td>
+<td>313.2</td>
+<td>64.74.124.65</td>
+<td>304.1</td>
+<td>203.190.126.131</td>
+<td style="background-color: #ccff99;">150</td>
+</tr>
+</tbody>
+</table>
+2) <strong>Akamai</strong> ( using profile.ak.fbcdn.net )
+<table style="font-size: 8pt;" border="1">
+<tbody>
+<tr>
+<th>Location</th>
+<th colspan="2">Opendns</th>
+<th colspan="2">Google</th>
+<th colspan="2">Local</th>
+</tr>
+<tr>
+<th></th>
+<th>IP Returned</th>
+<th>Ping to IP (ms)</th>
+<th>IP Returned</th>
+<th>Ping to IP (ms)</th>
+<th>IP Returned</th>
+<th>Ping to IP (ms)</th>
+</tr>
+<tr>
+<th>True (Thailand)</th>
+<td>208.50.77.112</td>
+<td>239.4</td>
+<td>60.254.185.83</td>
+<td>138.9</td>
+<td>58.97.45.59</td>
+<td style="background-color: #ccff99;">18.88</td>
+</tr>
+<tr>
+<th>Softlayer (US-East Coast)</th>
+<td>72.246.31.57</td>
+<td>1.312</td>
+<td>72.246.31.42</td>
+<td>1.262</td>
+<td>24.143.196.88</td>
+<td style="background-color: #ccff99;">0.877</td>
+</tr>
+<tr>
+<th>EC2 (US-East Coast)</th>
+<td>72.246.31.73</td>
+<td>2.581</td>
+<td>72.246.31.25</td>
+<td style="background-color: #ccff99;">1.792</td>
+<td>72.247.242.51</td>
+<td>1.941</td>
+</tr>
+<tr>
+<th>EC2 (Europe)</th>
+<td>195.59.150.139</td>
+<td style="background-color: #ccff99;">13.449</td>
+<td>92.122.207.177</td>
+<td>29.022</td>
+<td>195.59.150.138</td>
+<td>13.516</td>
+</tr>
+<tr>
+<th>EC2 (Singapore)</th>
+<td>208.50.77.94</td>
+<td>202</td>
+<td>60.254.185.73</td>
+<td>71.7</td>
+<td>124.155.222.10</td>
+<td style="background-color: #ccff99;">7.052</td>
+</tr>
+<tr>
+<th>Com Hem (Sweden)</th>
+<td>217.243.192.8</td>
+<td>51.73</td>
+<td>92.123.69.82</td>
+<td>35.972</td>
+<td>92.123.155.139</td>
+<td style="background-color: #ccff99;">13.212</td>
+</tr>
+<tr>
+<th>Tata (India)</th>
+<td>209.18.46.113</td>
+<td>300</td>
+<td>203.106.85.33</td>
+<td>196</td>
+<td>125.252.226.58</td>
+<td style="background-color: #ccff99;">100.5</td>
+</tr>
+</tbody>
+</table>
+The ping timings represent the lag to the destination server from the location in question. I will try to update the results from more locations if I can get shell access to a server or PC in other countries. If you are willing to run the tests for me please contact me(or post in comments)
+<h3>Conclusion</h3>
+Using OpenDNS or Google Public DNS may be fast in resolving the DNS, but they do not give the ideal results.
+
+In the case of Global DNS providers, the IP of the original requester is not passed along to the CDN's DNS servers so they are unable to route the user to the nearest POP.
+
+As you can see in the result tables above, when using OpenDNS from Thailand, trying to access static assets of Facebook, I am directed to a server in the USA whereas when using Google's DNS i am directed to a server in Japan and when using my ISP's DNS server I access content locally, hosted within my own ISPs network!
+
+While the effect on large websites using CDN is significant, smaller non-CDN'd websites are also effected. Most websites embed widgets, advertising and other assets which are likely to be CDN'd.
+
+The solution would be to use your ISPs DNS server rather than these Global providers. If they really suck so bad, its fairly simple to set up BIND as a caching recursive resolver to resolve hostnames directly bypassing the ISPs crappy service.
+
+<a href="http://www.linkedin.com/in/billf">Bill Fumerola</a>, ex-director of network engineering at OpenDNS <a href="http://forums.opendns.com/comments.php?DiscussionID=1096#Item_7">confirms this problem</a> on OpenDNS forums.
+
+You can run the tests from your own computer using this simple script: <a href="/dnstest.py" target="_blank">dnstest.py</a>
+
+Here is the named.conf for a recursive server. Set your computer to use 127.0.0.1 as the DNS. - config may differ for you, RTFM and adapt accordingly.
+<pre>options {
+        directory "/var/named";
+        listen-on {
+		127.0.0.1;
+        };
+        auth-nxdomain yes;
+        allow-recursion {
+                127.0.0.1;
+        };
+        dump-file       "/var/named/data/cache_dump.db";
+        statistics-file "/var/named/data/named_stats.txt";
+        memstatistics-file "/var/named/data/named_mem_stats.txt";
+
+};
+
+//
+// a caching only nameserver config
+//
+zone "." {
+        type hint;
+        file "named.ca";
+};
+
+include "/etc/named.rfc1912.zones";
+
+include "/etc/named.dnssec.keys";
+include "/etc/pki/dnssec-keys/dlv/dlv.isc.org.conf";</pre>
+EDIT 1: Inverted the axis added test data from Europe
+EDIT 2: Added test data from Singapore
+EDIT 3: Added test data from Sweden
+EDIT 4: Added test data from India
+EDIT 5: Added link to Bill Fumerola’s explanation of the problem.
+
+<h3>Shameless plug</h3>
+<a href="http://www.turbobytes.com/">Turbobytes</a> - Faster content delivery using multiple CDNs
+

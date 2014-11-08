@@ -1,0 +1,56 @@
+{
+    "tags": [
+        "bots", 
+        "google", 
+        "Googlebot", 
+        "logazier", 
+        "scraper"
+    ], 
+    "url": "/python-script-to-detect-bad-botspeople-faking-as-googlebot.html", 
+    "title": "Python script to detect bad bots/people faking as Googlebot", 
+    "draft": false, 
+    "date": "Sat, 28 Mar 2009 16:25:34 +0000", 
+    "categories": [
+        "Python", 
+        "Webmaster Things"
+    ]
+}
+A script for analyzing my webservers access.log is long overdue here is a small start. Just recently I noticed a bad bot was attempting to scrape whole of my site using Googlebot's useragent. Since im learning python, I thought it might be a nice experience to write a simple script which can help me detect these fakers.
+
+The script looks at the access log, looks for records matching "Googlebot" then validates based on techniques mentioned at "<a href="http://googlewebmastercentral.blogspot.com/2006/09/how-to-verify-googlebot.html">How to verify Googlebot</a>" at Google Webmaster Central Blog. It may also be useful or even fun to catch other SEOs trying to see your site thru Googlebot's eyes.
+
+The logic is simple. The IP from which the request is coming in should point to a *.googlebot.com and in turn the hostname should resolve back to the same IP. The first part can be faked by a smart faker, but the latter is not possible(unless they break into Google's DNS servers ;) ). This 2 step validation is a sure shot method.
+
+For a Genuine Googlebot request :-
+
+Server log entry :-
+<code><strong>66.249.71.202</strong> - - [28/Mar/2009:08:59:14 -0500] GET / HTTP/1.1 "200" 17892 "-" "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" "-"</code>
+IP : 66.249.71.202
+
+Thus :-
+<code># host 66.249.71.202
+202.71.249.66.in-addr.arpa domain name pointer crawl-66-249-71-202.<strong>googlebot.com</strong>.
+# host crawl-66-249-71-202.googlebot.com.
+crawl-66-249-71-202.googlebot.com has address <strong>66.249.71.202</strong>
+#</code>
+For now this script outputs : The number of hits, IP, hostname, and what ip the hostname resolvs to....
+<code># ./logazier.py
+92 - 99.190.96.157 - adsl-99-190-96-157.dsl.pltn13.sbcglobal.net - FAKE - 99.190.96.157
+36 - 24.154.150.217 - dynamic-acs-24-154-150-217.zoominternet.net - FAKE - 24.154.150.217
+4 - 83.82.191.185 - 5352BFB9.cable.casema.nl - FAKE - 83.82.191.185
+4 - 69.64.69.150 - 69-64-69-150.dedicated.abac.net - FAKE - 69.64.69.150
+3 - 64.191.54.85 - venus.surfwebhost.com - FAKE - 64.191.54.85
+3 - 117.47.205.13 - err - FAKE - err
+2 - 218.186.12.202 - cm202.omega12.maxonline.com.sg - FAKE - 218.186.12.202
+1 - 96.254.203.143 - pool-96-254-203-143.tampfl.fios.verizon.net - FAKE - 96.254.203.143
+1 - 76.160.175.238 - mail.appianllc.com - FAKE - 76.160.175.238
+1 - 121.246.166.247 - 121.246.166.247.static-hyd.vsnl.net.in - FAKE - err
+1 - 117.196.235.141 - err - FAKE - err</code><strong></strong>
+
+<strong>The script can be downloaded at : <a href="/logazier/0.0.1/logazier.py">/logazier/0.0.1/logazier.py</a></strong>
+
+Upcoming features.
+<ol>
+	<li> Detect other major bots as well - yahoo, msn, alexa, etc...</li>
+	<li> Analyze the access.log for bad bot activity even when the bots use regular browser user agents - much more complex than I thought :)</li>
+</ol>

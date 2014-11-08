@@ -1,0 +1,50 @@
+{
+    "tags": [
+        "Django", 
+        "Projects", 
+        "Python", 
+        "SEO"
+    ], 
+    "url": "/i-django.html", 
+    "title": "I <3 Django", 
+    "draft": false, 
+    "date": "Sun, 30 Nov 2008 19:42:39 +0000", 
+    "categories": [
+        "Django"
+    ]
+}
+Last month(November) had been quite busy for me, had many things going on including :-
+<ul>
+	<li><strong>My new Secret Project</strong> : Its a new <a href="http://www.djangoproject.com/">Django</a> based web project, if all goes as per plan I take over the world and declare windows illegal ;)</li>
+	<li><strong>Visa issues</strong> : Apparently the process for a Non-Immigrant visa in Thailand is not an easy route.</li>
+	<li><strong>Thai Political Uncertainty</strong> : The drama is simply too irresistible to not follow, constant fights, arguments and lame comments from both sides (pro-govt and PAD)</li>
+	<li><strong>Trip to India</strong> : I had gone on a short trip to India on Social visit in the beginning of the month.</li>
+	<li><a href="http://www.thaindian.com/newsportal/tag/mumbai-terror-attack"><strong>Mumbai Terror Attacks</strong></a> : The bastards struck the Indian financial capital of Mumbai. Even though the 62 hour long ordeal is over now, the blame game drama has begun and would make major news for months to come.</li>
+</ul>
+So... apologies to my regular readers (just in case there are any besides me) just had too many things shoved into one month.
+
+A couple of months ago I <a href="/messing-with-ror.html">wrote about how I had finally chosen Ruby on Rails over Django</a>. Well... at the time of writing I hadnt taken a serious look at Django. Soon after making the post i decided to give Django a second look. The more i dugg, the deeper I fell in love Django and Python. I have <a href="http://proteus-tech.com/">Ben</a> and <a href="http://www.kirit.com/">Kirit</a> who I can regularly irriate with n00b questions, the <a href="http://groups.google.com/group/django-users">Django-Users group</a> is quite active and the <a href="http://docs.djangoproject.com/en/dev/">Django documentation</a> is just awesome. Django truly rocks.
+
+About my new secret project, it is a website about -SNIP- and I aim it to be one of the authorative websites in it domains. The topic of the site is not one I am an expert in, however that shouldnt be an issue. The website is located at -SNIP- . For this project <a href="http://www.archit.in/">Archit</a> is helping with css n stuff for free :) .
+
+As expressed above, the website is made using Django, and is un early development stages and even while development the data entry is already in progress. It would eventually become a really huge database.
+
+The best thing i liked about Django is that you can import the Django enviornment in any regular external script and have access to all the functions, models defined in your project. You even have access to all the django APIs within your project. See <a href="http://www.cotellese.net/2007/09/27/running-external-scripts-against-django-models/">this awesome post</a> for more info of what im saying. I modified it a little to suit my project.
+<pre lang="python">#for portability
+project = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(project)
+os.environ['DJANGO_SETTINGS_MODULE'] ='topsecretproject.settings'
+from django.core.management import setup_environ
+from topsecretproject import settings
+from topsecretproject.app.models import model1, model2
+setup_environ(settings)
+
+data = model1.objects.all()
+#... and so onn....</pre>
+Tools used : <a href="http://www.postgresql.org/">Postgres</a>, <a href="http://git.or.cz/">git</a>, <a href="http://github.com/">github</a>, <a href="http://projects.gnome.org/gedit/">gedit</a>, <a href="http://www.activestate.com/Products/komodo_ide/">Komodo IDE</a>(looks nice but free trial gonna run out soon :( ), <a href="http://www.ubuntu.com/">Ubuntu</a>(my notebook), <a href="http://www.centos.org/">CentOS</a>(development server - crappy VPS)
+
+Since this project is being built from the ground up, I have full control of everything. Keeping both <strong>usability and <a href="/category/seo">Search Engine Optimization</a></strong> in mind and not really feeling like there is a compromise in any.
+
+Perhaps in a couple of weeks the site would be somewhat presentable, then id discuss various aspects about the code and techniques im using in keeping the site SEOed. Its too early to talk about it at the moment.
+
+Disclaimer : <em>No windows users were harmed during the production of this post.</em>

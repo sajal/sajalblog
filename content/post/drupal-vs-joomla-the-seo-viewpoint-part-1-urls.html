@@ -1,0 +1,43 @@
+{
+    "tags": [
+        "CMS", 
+        "Drupal", 
+        "Joomla", 
+        "SEO"
+    ], 
+    "url": "/drupal-vs-joomla-the-seo-viewpoint-part-1-urls.html", 
+    "title": "Drupal vs Joomla - The SEO viewpoint - Part 1 URLs", 
+    "draft": false, 
+    "date": "Sun, 17 Feb 2008 12:06:25 +0000", 
+    "categories": [
+        "Drupal", 
+        "SEO"
+    ]
+}
+Last month I started using Drupal and explained how <a href="/drupal-rulez-joomls-sux.html"><strong>Drupal is better</strong> in terms of organizing content when compared to Joomla</a>. Today I am going to explain some <strong>SEO benifits of using Drupal over Joomla</strong>.
+
+This is the first part of a series and I will blog about <strong>Search Engine Friendly URLs</strong> today:-
+
+We all know that search engines does not like pages with meaningless querystrings.
+
+By default, both the CMSs produce alternate URLs with all sorts of numbers and things in the querystring. Both have a feature to produce neat URLs which removes the querystring and adds the numbers as the foldernames within the URL. This makes use of an <strong>.htaccess file</strong>.
+
+<!--more-->Using the bundled <a href="http://drupal.org/node/15365" title="How to make clean URL using Drupal">Clean URLs</a> basically removes the "?q=" portion. so an article URL which would otherwise have been "http://www.example.com/?q=node/83" would now become "http://www.example.com/node/83". Nice and Easy. Content is always 1 folder deep where the foldername "node" has absolutely no significance.
+
+<strong>Joomla however makes multiple URLs for the same content</strong>. If once content is linked from different places in different ways, it would make many links with different ItemIDs all pointing to the same content. Default URL structure for Joomla! "http://www.example.com/index.php?option=com_content&amp;task=view&amp;id=17&amp;Itemid=26" it would get rewritten to "http://www.example.com/content/view/17/26/" . In this case the ItemID "26" may changed based on how your user found the page. Here the content is always 3 folders deep and the words "content" and "view" does absolutely nothing to describe the page in question.
+
+Additional tools do exists lets compare the options available for both these CMSs...
+
+For Drupal <strong>Path</strong> (A <strong>core module</strong>) :  Basically what Path does is it allows you to list old urls from our example "node/83" and make an alias to say "blue-widgets/pricing.html" so the whole URL looks like "http://www.example.com/blue-widgets/pricing.html". Now this tells the Search Engines(and the users) that the page in question deals about the pricing of Blue Widgets.
+
+For Joomla : Error no such extension found ;)
+
+3rd Party Addons :
+
+Drupal has <a href="http://drupal.org/project/pathauto">Pathauto</a>:This module is very robust, user friendly, feature rich and powerful. You can specify custom URLs based on various criteria depending on content type, taxonomy terms and even custom fields within a content. I was surprised tofind that this even <strong>removes useless words from the URI</strong>. example a content with the title "Thailand: For All Seasons &amp; Reasons!" got the URL "/thailand-all-seasons-reasons.html" aint that wonderful?
+
+<strong>Joomla has</strong> (among others) <strong><a href="http://extensions.joomla.org/component/option,com_mtree/task,viewlink/link_id,2524/Itemid,35/" title="NuSEF same as OpenSEF">OpenSEF</a></strong> : This has some nice features, but not as powerfull or even user friendly as Pathauto. Here all you only have is few limited options spread across dozens of config pages. If you wanted custom components to work, you have to find (beg/borrow/steal) a <strong>customized sef_ext.php script</strong> for that particular component, not very cool thing to do. In Drupal you can set these things within pathauto only, indipendant of the modules. One thing good about OpenSEF is that it takes care of the duplicate content problem I mentioned earlier, but the downside is that it might not work how it was supposed to work as each URL would now get bound to a particular ItemID.
+
+Some might call me biased towards Drupal, but the bottom line is that <strong><a href="/drupal-rulez-joomls-sux.html" title="Drupal vs Joomla">Drupal rocks and Joomla Sux! </a></strong>
+
+Part 1 of the Series. More to follow later on various other aspects on <strong>Drupal and Joomla from an SEO viewpoint</strong> . Subscribe to my <a href="/feed" title="RSS Feed">feed</a> to stay updated.

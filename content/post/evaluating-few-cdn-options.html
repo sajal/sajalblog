@@ -1,0 +1,98 @@
+{
+    "tags": [
+        "pagespeed", 
+        "site performance"
+    ], 
+    "url": "/evaluating-few-cdn-options.html", 
+    "title": "Evaluating few CDN options", 
+    "draft": false, 
+    "date": "Fri, 10 Jun 2011 21:10:53 +0000", 
+    "categories": [
+        "Webmaster Things"
+    ]
+}
+Recently, I was evaluating CDN options for a client with some unique challenges. We ended up using Amazon CloudFront, but ill detail the options we looked at and what let us to this decision.
+
+Some things to note:-
+<ul>
+	<li>We would serve CSS, JS, Images referred to from stylesheets and some website images thru the CDN.</li>
+	<li>Due to the nature(trust me) of the site we expect a higher than normal miss rate. The access is spread across a wide number of urls, some may get lower hits.</li>
+	<li>Speed is important. Website should be fast(er) from everywhere. The most important regions in order of priority are US, EU, AU and ROTW with US being most important.</li>
+	<li>Anything on the site can change anytime, there is no build process as such. Any object anywhere can change, and change must be visible ASAP.</li>
+	<li>Developers/designers shouldn't be harassed to purge a file if they change something.</li>
+	<li>CDN data usage : ~100 GB per month</li>
+</ul>
+
+The providers we looked at :-
+
+<strong><a href="http://www.maxcdn.com/features/network">MaxCDN</a>: Almost sealed the deal.</strong>
+
+Pros:-
+<ul>
+	<li>Cheap : $40 for first TB (must use in a year) + $99 per additional TB . On current usage rates this comes to say 0.04+ /GB.</li>
+	<li>* Anycast/BGP routing : No way bad <a href="/in-a-cdnd-world-opendns-is-the-enemy.html">DNS server can mess up</a> routing.</li>
+	<li>Nice control panel, has a purge all option for just in case. Purges take effect almost instantly.</li>
+	<li>Handles gzip well.</li>
+	<li>Can have separate cache timings for caching in Browser and caching at CDN. - i.e. We can say not cache a file in browser level, but cache at CDN and purge when theres a change made.</li>
+</ul>
+
+Cons:-
+<ul>
+	<li><strong><a href="http://www.maxcdn.com/features/network">Poor global coverage</a>. - No POP/Edge in Asia/AU - Deal Breaker</strong></li>
+	<li>Pages loaded same speed when testing from AU with or without CDN.</li>
+</ul>
+
+<strong><a href="http://www.edgecast.com/">EdgeCast</a>: Looked good at first, but poor gziping.</strong>
+
+Pros:-
+<ul>
+	<li>Impressive list of networks</li>
+	<li>Highly configurable control panel.</li>
+	<li>Can have separate cache timings for caching in Browser and caching at CDN. - i.e. We can say not cache a file in browser level, but cache at CDN and purge when theres a change made.</li>
+</ul>
+
+Cons:-
+<ul>
+	<li><strong>Gzippable files will not be gzipped for cache misses. - Deal Breaker</strong></li>
+	<li>Request from Edge server to origin is uncompressed.</li>
+	<li>Expensive and wants higher commitments.</li>
+	<li>DNS Based routing</li>
+</ul>
+
+<strong><a href="http://www.us.cdnetworks.com/">CDNetworks</a>: Didn't look past price</strong>
+
+Cons:-
+<ul>
+	<li><strong>Ridiculously high price - Dealbreaker</strong></li>
+</ul>
+
+<strong><a href="http://aws.amazon.com/cloudfront/">Amazon CloudFront</a>: WIN</strong>
+
+Pros:-
+<ul>
+	<li><strong>Testing showed our pages to be fastest from all regions when using cloudfront</strong>. YMMV</li>
+	<li>No commitments - $0.15 - $0.2/GB (depends on where user accesses from) + negligible per request fee</li>
+	<li>Client is already AWS user, one less account to maintain.</li>
+	<li>No need to send gazillion emails to gazillions of people to get started. No bargaining.</li>
+</ul>
+
+
+
+Cons:-
+<ul>
+	<li>No POP/Edge in AU (but has in Singapore, Hong Kong and Tokyo)</li>
+	<li>DNS based routing.</li>
+	<li>Charges fee per request and per invalidation(purge) request.</li>
+	<li>No control panel, invalidation requests need to be done by API only.</li>
+	<li>Does not do gzipping, but honours Vary header and serves correct version based on what user asks.</li>
+	<li>Can't use querystring parameters for CDN cachebusting. CloudFront ignores querystrings.</li>
+</ul>
+
+
+
+Sidenote : Requests from CloudFront to origin are HTTP 1.0 . Nginx by default does not serve gzip to 1.0 request. <a href="http://wiki.nginx.org/HttpGzipModule#gzip_http_version">gzip_http_version</a>  setting must be changed in order to use nginx as origin for CloudFront.
+
+
+The system we architected adds something based on the file mtime as a part of the URL, so now we don't need to any purges at the CDN. Also now we can have far future expires on all CDN'd objects cause if something changes, the URL would automagically change.
+
+For us, the price and features are important, but whats more important is the results. We went with the provider with lesser features just because our pages loaded fastest with them.

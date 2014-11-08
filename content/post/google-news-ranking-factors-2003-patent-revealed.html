@@ -1,0 +1,65 @@
+{
+    "tags": [
+        "google", 
+        "google news", 
+        "SEO"
+    ], 
+    "url": "/google-news-ranking-factors-2003-patent-revealed.html", 
+    "title": "Google News ranking factors, 2003 patent revealed", 
+    "draft": false, 
+    "date": "Thu, 20 Aug 2009 10:13:34 +0000", 
+    "categories": [
+        "SEO"
+    ]
+}
+Via <a href="http://www.webpronews.com/topnews/2009/08/19/possible-google-news-ranking-factors-revealed-in-patent">WebProNews</a> by Chris Crum
+A patent application by Google "<a href="http://patft.uspto.gov/netacgi/nph-Parser?Sect1=PTO2&Sect2=HITOFF&u=%2Fnetahtml%2FPTO%2Fsearch-adv.htm&r=1&p=1&f=G&l=50&d=PTXT&S1=7,577,655.PN.&OS=pn/7,577,655&RS=PN/7,577,655">Systems and methods for improving the ranking of news articles</a>" was Granted on August 18, 2009. The patent was originally filed about 6 years ago on "September 16, 2003". Interesting analysis in human readable language at <a href="http://www.seobythesea.com/?p=2810">Seo By The Sea</a> by Bill Slawski.
+
+Before continuing, it is better if you read the <a href="http://www.seobythesea.com/?p=2810">Bill's</a> and <a href="http://www.webpronews.com/topnews/2009/08/19/possible-google-news-ranking-factors-revealed-in-patent">Chris'</a> posts first.
+
+In spite of this filing being 6 years old, I personally believe some of the theory is still valid today. It is important to know what Google <strong>was</strong> doing in 2003 to better understand what it <strong>may</strong> be doing today.
+
+Abstract of the patent :-
+
+<blockquote>A system ranks results. The system may receive a list of links. The system may identify a source with which each of the links is associated and rank the list of links based at least in part on a quality of the identified sources.</blockquote>
+
+I will first discuss points already established and then try to have my own conclusions.
+
+<strong>Source Rank</strong> : This is a rank given to different news sources. An article from a source having higher "Source Rank" would be more likely to rank higher than others. According to the patent, the following metrics go into determining the "Source Rank".
+
+<strong>Number of articles produced by the news source during a given time period </strong> : Presumably more the better, rather more original articles the better compared to newswire stories.
+
+<strong>Average length of an article from the news source </strong> : Presumably, a news source with longer articles would get a better <em>Source Rank</em>.
+
+<strong>Breaking news score</strong> : The most interesting aspect, I had a rough feeling this was an important factor, the patent agrees. Ill discuss in my conclusions below, citing examples. Basically as per the patent, a news source which publishes news about events which just occurred, gives source a higher <em>Source Rank</em>.
+
+<strong>Usage pattern</strong> : Tracking click thrus from Google News search and analyzing that data. All links on Google news are redirected thru their forwarder. They have been tracking this data for as long as i can remember.
+
+<strong>Human opinion of the news source </strong> : Quite obvious :)
+
+<strong>Circulation statistics of the news source</strong> : Circulation stats from various media monitoring agencies.
+
+<strong>The size of the staff associated with the news source </strong> : Google recently started showing(where possible) author names in news search. These are detected automagically using some algorithm. Im quite sure that they have been tracking these internally for quite some time.
+<img src="/Google.png" alt="Google News search result showing Author Name">
+
+<strong>The number of news bureaus associated with the news source</strong> To favour bigger more established news outlets.
+
+<strong>Original named entities appearing in articles produced by the news source</strong> : A named entity is a specific person, place, organization, or thing. More unique Named Entities the better. This probably shows more in-depth news source.
+
+<strong>Number of topics on which the source produces content</strong> : To determine the niche the news source participates in. A news source like <a href="http://www.techcrunch.com/">TechCrunch</a> almost exclusively writes about Tech related articles, Google may then determine that TechCrunch is an authority on Tech related topics.
+
+<strong>International diversity of the news source </strong> : Checking on countries from where people visit to these sites from via Google News Search based on IP.
+
+<strong>The writing style used by the news source </strong> : Grammar, spelling, readability. Writing style may also help Google determine target audience. (eg British vs American English)
+
+<h3>Conclusion</h3>
+
+This is not at all related to what Google told us about <a href="/secrets-of-google-newswhat-i-learnt-the-hard-way.html">ranking on Google News</a>, it does provide some nice insight.
+
+Now what i believe, is that <a href="/seo-and-newsgooglecom-run-your-own-news-website.html">Google News</a> also implements what id like to call a <strong>Source Rank per Topic</strong>. The <em>Breaking news score</em> as explained above is applicable on per topic basis too. Example my site had few stories about an incident just after a major news broke. It got some traffic, then got clouded by the regular big sources which allegedly have a much higher <em>Source Rank</em>. But from a couple of days later, any follow-ups I did, ranked well on Google News. My assumption is that Google sees which sources were the ones to <em>Break</em> the particular story and assigns them a temporary(or permanent) authority on the topic.
+
+I have no views on the content length point, but i do agree that more original sentences do result in a higher <strong>Source Rank</strong>.
+
+Another point which i don't see mentioned but have a strong belief to be an important factor for the <em>Source Rank</em> is the performance of the website. Its basic common sense, that if Google is sending a lot of traffic, they don't want these people to wait for ages while the overloaded servers of the News site is churning out the pages. Google would rather like faster sites. This was personally observed by me after I implemented a new caching mechanism which made average random page generation time drop to 50 to 100ms from previous ~1s . Within days my traffic from Google doubled. So even if you are running a small site like mine, it is best to keep your random page load delay as small as possible.
+
+Google also sees(IMHO) regular SEO policies in determining the <em>Story Rank</em> for a news source. Internal linkage, external Linkage, etc..

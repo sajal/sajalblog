@@ -1,0 +1,283 @@
+{
+    "tags": [
+        "pagespeed", 
+        "site performance"
+    ], 
+    "url": "/attn-big-media-web-page-speed-matters.html", 
+    "title": "ATTN Big Media: Web page speed matters!", 
+    "draft": false, 
+    "date": "Sun, 04 Jul 2010 14:59:50 +0000", 
+    "categories": [
+        "Webmaster Things"
+    ]
+}
+I am not a front-end kinda guy, but these days my latest obsession is to test and improve web page loading times. With this blogpost, I intend to show with examples of some selected websites and what are they doing right and what *desperately* needs to be improved. As I learn more about this I will be posting more in-depth posts on these issues.
+
+<h4>Why does it matter?</h4>
+
+These days almost everyone is on high-speed 'broadband' connections so the sites should load fast. Right? No! With faster connectivity, users get more impatient and expect websites to load faster. 
+
+E-Commerce websites have done <a href="http://radar.oreilly.com/2008/08/radar-theme-web-ops.html">studies</a> which proove faster sites results in more sales. Google has also been <a href="http://www.youtube.com/watch?v=MStKwEff_kY" title="Velocity 2010: Urs Holzle">advocating</a> to webmasters to improve their pageload times. Now <a href="http://googlewebmastercentral.blogspot.com/2010/04/using-site-speed-in-web-search-ranking.html" title="Using site speed in web search ranking">pageload is a signal for ranking in Google</a>, abit a minor signal, but it still matters.
+
+Overall faster websites <a href="http://googleresearch.blogspot.com/2009/06/speed-matters.html">results</a> in a <a href="http://www.stevesouders.com/blog/2009/07/27/wikia-fast-pages-retain-users/" title="Wikia: fast pages retain users">higher user retention</a>. Faster websites also <a href="http://radar.oreilly.com/2009/07/velocity-making-your-site-fast.html">lower operational costs</a>. Not directly related, but an optimized website is also less susceptible to <a href="http://www.stevesouders.com/blog/2010/06/01/frontend-spof/">Frontend SPOF</a>.
+
+<h4>Analysis of pageload time</h4>
+
+My favorite tool for this is <a href="http://www.webpagetest.org/" title="Pagetest - where web sites go to get FAST!">webpagetest.org</a>. They also have an active <a href="http://www.webpagetest.org/forums/">forum</a> where users can discuss results and exchange tips on making it faster.
+
+Some test results :-
+
+<table border="1" cellspacing="0" >
+    <tr>
+        <th>Site</th>
+        <th>Alexa Rank</th>
+        <th>First View</th>
+        <th>Repeat View</th>
+    </tr>
+    <tr>
+        <th colspan="4">My Sites</th>
+    </tr>
+    <tr>
+        <td><a href="/" title="Sajal Kayan">Main blog page</a></td>
+		<td>436,669</td>
+        <td><a href="http://www.webpagetest.org/result/100703_2a389e9913355156fe514dad6496fa1f/" rel="nofollow">1.512s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_2a389e9913355156fe514dad6496fa1f/" rel="nofollow">1.038s</a></td>
+    </tr>
+    <tr>
+        <td>A single <a href="/in-a-cdnd-world-opendns-is-the-enemy.html" title="In a CDN’d world, OpenDNS is the enemy!">post</a> page on my blog.</td>
+		<td>436,669</td>
+        <td><a href="http://www.webpagetest.org/result/100630_f939860d7469491b4445dbd93d9fd9a2/" rel="nofollow">0.822s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100630_f939860d7469491b4445dbd93d9fd9a2/" rel="nofollow">0.648s</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://www.thaindian.com/" title="Thaindian News">Thaindian.com Homepage</a></td>
+		<td>5,368</td>
+        <td><a href="http://www.webpagetest.org/result/100703_c7ab5a556aa0ce97fef055be59c4a520/" rel="nofollow">0.740s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_c7ab5a556aa0ce97fef055be59c4a520/" rel="nofollow">0.514s</a></td>
+    </tr>
+    <tr>
+        <td>A <a href="http://www.thaindian.com/newsportal/politics/us-vice-president-joe-biden-arrives-in-baghdad-on-surprise-visit_100390256.html" title="U.S. Vice President Joe Biden arrives in Baghdad on surprise visit">story page</a> on Thaindian News</td>
+		<td>5,368</td>
+        <td><a href="http://www.webpagetest.org/result/100703_e4da8ccb9799cf9fde59b0b3137aae71/" rel="nofollow">4.517s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_e4da8ccb9799cf9fde59b0b3137aae71/" rel="nofollow">3.411s</a></td>
+    </tr>
+    <tr>
+        <th colspan="4">Sites for Geeks/nerds</th>
+    </tr>
+    <tr>
+        <td><a href="http://stackoverflow.com/">Stack Overflow</a></td>
+		<td>445</td>
+        <td><a href="http://www.webpagetest.org/result/100703_1f13821a589ccc393783bcd07c3d8fc6/" rel="nofollow">2.233s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_1f13821a589ccc393783bcd07c3d8fc6/" rel="nofollow">1.734s</a></td>
+    </tr>
+    <tr>
+        <td>A <a href="http://stackoverflow.com/questions/3172298/gcc-xcode-speedup-suggestions">single</a> thread at Stack Overflow</td>
+		<td>445</td>
+        <td><a href="http://www.webpagetest.org/result/100703_b935a42bd57a347c9cb8dba3ef94269d/" rel="nofollow">2.846s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_b935a42bd57a347c9cb8dba3ef94269d/" rel="nofollow">2.645s</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://slashdot.org/">Slashdot.Org</a></td>
+		<td>1,393</td>
+        <td><a href="http://www.webpagetest.org/result/100703_b81b1c497021b36a776bc5626d4660d3/" rel="nofollow">3.773s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_b81b1c497021b36a776bc5626d4660d3/" rel="nofollow">2.175s</a></td>
+    </tr>
+    <tr>
+        <td>A <a href="http://tech.slashdot.org/story/10/05/29/1355252/How-CDNs-and-Alternative-DNS-Services-Combine-For-Higher-Latency" title="How CDNs and Alternative DNS Services Combine For Higher Latency">single</a> thread at Slashdot</td>
+		<td>1,393</td>
+        <td><a href="http://www.webpagetest.org/result/100703_cf6076bf98dc973a471b93ee744498f3/" rel="nofollow">3.817s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_cf6076bf98dc973a471b93ee744498f3/" rel="nofollow">2.100s</a></td>
+    </tr>
+    <tr>
+        <th colspan="4">New media</th>
+    </tr>
+    <tr>
+        <td><a href="http://www.huffingtonpost.com/">The Huffington Post</a></td>
+		<td>152</td>
+        <td><a href="http://www.webpagetest.org/result/100703_46337caf586714160d7fa61340a04ed1/" rel="nofollow">6.945s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_46337caf586714160d7fa61340a04ed1/" rel="nofollow">4.044s</a></td>
+    </tr>
+    <tr>
+        <td>A <a href="http://www.huffingtonpost.com/2010/07/03/california-state-workers_n_634695.html" title="California State Workers Brace For Minimum Wage">single post on HuffPo</td>
+		<td>152</td>
+        <td><a href="http://www.webpagetest.org/result/100703_f23780e62939a0ba7c00d6e960bef6d2/" rel="nofollow">7.563s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_f23780e62939a0ba7c00d6e960bef6d2/" rel="nofollow">4.416s</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://techcrunch.com/">TechCrunch</a></td>
+		<td>357</td>
+        <td><a href="http://www.webpagetest.org/result/100703_ae0469e4f1a4127ff10d71c38178c166/" rel="nofollow">16.462s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_ae0469e4f1a4127ff10d71c38178c166/" rel="nofollow">14.760s</a></td>
+    </tr>
+    <tr>
+        <td>An <a href="http://techcrunch.com/2010/07/03/facetime-and-why-apples-massive-integration-advantage-is-just-beginning/" title="FaceTime and Why Apples Massive Integration Advantage is Just Beginning">individual</a> post on TechCrunch</td>
+		<td>357</td>
+        <td><a href="http://www.webpagetest.org/result/100703_aa34704a0c7596e5df80a695bab87022/" rel="nofollow">10.987s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_aa34704a0c7596e5df80a695bab87022/" rel="nofollow">6.764s</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://www.readwriteweb.com/">ReadWriteWeb</a></td>
+		<td>1,996</td>
+        <td><a href="http://www.webpagetest.org/result/100703_610dde132450be8c91bd00cc18d63f90/" rel="nofollow">17.766s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_610dde132450be8c91bd00cc18d63f90/" rel="nofollow">11.643s</a></td>
+    </tr>
+    <tr>
+        <td>A <a href="http://www.readwriteweb.com/archives/paperli_gets_investment_for_its_twitter_newspapers.php" title="Paper.li Gets Investment for Its Twitter Newspapers">single</a> post on ReadWriteWeb</td>
+		<td>1,996</td>
+        <td><a href="http://www.webpagetest.org/result/100703_ba46f8d118c183e10c8b22635c276630/" rel="nofollow">18.890s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_ba46f8d118c183e10c8b22635c276630/" rel="nofollow">10.408s</a></td>
+    </tr>
+    <tr>
+        <th colspan="4">Big media</th>
+    </tr>
+    <tr>
+        <td><a href="http://news.google.com/">Google News</a></td>
+		<td>1</td>
+        <td><a href="http://www.webpagetest.org/result/100704_625c0dac7cbe78df617239a9b5a125bb/" rel="nofollow">3.253s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_625c0dac7cbe78df617239a9b5a125bb/" rel="nofollow">1.365s</a></td>
+    </tr>
+    <tr>
+        <td>Single <a href="http://www.google.com/hostednews/ap/article/ALeqM5hvWEqwq3CrRvaQCmt21MfoYhjZJQD9GO6HI80" title="Petraeus: We are in this to win in Afghanistan" rel="nofollow">story</a> on Google News</td>
+		<td>1</td>
+        <td><a href="http://www.webpagetest.org/result/100704_ba30dd802cd14323a2e2e840034cf0ce/" rel="nofollow">2.688s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_ba30dd802cd14323a2e2e840034cf0ce/" rel="nofollow">1.238s</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://news.yahoo.com/">Yahoo! News</a></td>
+		<td>4</td>
+        <td><a href="http://www.webpagetest.org/result/100704_170206d154d05ef42b622636c1a58f1c/" rel="nofollow">3.174s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_170206d154d05ef42b622636c1a58f1c/" rel="nofollow">1.707s</a></td>
+    </tr>
+    <tr>
+        <td>Single <a href="http://news.yahoo.com/s/ap/as_afghanistan;_ylt=AhRJzVLEo04_F09GGolXDKes0NUE;_ylu=X3oDMTNlNW5zdHBlBGFzc2V0A2FwLzIwMTAwNzA0L2FzX2FmZ2hhbmlzdGFuBGNjb2RlA21vc3Rwb3B1bGFyBGNwb3MDMQRwb3MDMgRwdANob21lX2Nva2UEc2VjA3luX3RvcF9zdG9yeQRzbGsDcGV0cmFldXN3ZWFy" title="Petraeus: We are in this to win in Afghanistan" rel="nofollow">story</a> on Yahoo! News</td>
+		<td>4</td>
+        <td><a href="http://www.webpagetest.org/result/100704_bf2f23029be14f1af65648beac250dfd/" rel="nofollow">5.310s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_bf2f23029be14f1af65648beac250dfd/" rel="nofollow">2.335s</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://www.nytimes.com/">New York Times</a></td>
+	    <td>91</td>
+        <td><a href="http://www.webpagetest.org/result/100704_51db94d84d53e178ef38e759a5292467/" rel="nofollow">7.038s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_51db94d84d53e178ef38e759a5292467/" rel="nofollow">2.200s</a></td>
+    </tr>
+    <tr>
+        <td>Single <a href="http://www.nytimes.com/2010/07/04/business/04bptax.html" title="As Oil Industry Fights a Tax, It Reaps Billions From Subsidies">single</a> story on NYT</td>
+	    <td>91</td>
+        <td><a href="http://www.webpagetest.org/result/100704_66d6d33534b86ca572123b08e08e9270/" rel="nofollow">4.650s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_66d6d33534b86ca572123b08e08e9270/" rel="nofollow">4.507s</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://www.bbc.co.uk/">BBC</a></td>
+		<td>40</td>
+        <td><a href="http://www.webpagetest.org/result/100704_ac802e4531dbd9daab60b0d429a57c72/" rel="nofollow">7.485s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_ac802e4531dbd9daab60b0d429a57c72/" rel="nofollow">3.427s</a></td>
+    </tr>
+    <tr>
+        <td>Single <a href="http://news.bbc.co.uk/2/hi/middle_east/10500869.stm" title="Hezbollah mentor Fadlallah dies in Lebanon">story</a> on BBC</td>
+		<td>40</td>
+        <td><a href="http://www.webpagetest.org/result/100704_24f6bc473e625429b56dc26cc9aa3192/" rel="nofollow">7.148s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_24f6bc473e625429b56dc26cc9aa3192/" rel="nofollow">3.851s</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://edition.cnn.com/">CNN</a></td>
+		<td>58</td>
+        <td><a href="http://www.webpagetest.org/result/100703_2e1e879aecaf0ec4981d15e2f0deafa7/" rel="nofollow">10.197s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_2e1e879aecaf0ec4981d15e2f0deafa7/" rel="nofollow">2.528s</a></td>
+    </tr>
+    <tr>
+        <td>An <a href="http://edition.cnn.com/2010/WORLD/meast/07/03/munich.mastermind.dead/index.html" title="Suspected Munich massacre mastermind dead, reports say">Article</a> on CNN</td>
+		<td>58</td>
+        <td><a href="http://www.webpagetest.org/result/100703_9c67e76e0e27e54b5d0f854a83b8d48b/" rel="nofollow">7.989s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_9c67e76e0e27e54b5d0f854a83b8d48b/" rel="nofollow">3.523s</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://www.msnbc.msn.com/">MSNBC</a></td>
+		<td>9</td>
+        <td><a href="http://www.webpagetest.org/result/100704_4ea04da58d2e8576a4d9bd458c5f6bc9/" rel="nofollow">8.172s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_4ea04da58d2e8576a4d9bd458c5f6bc9/" rel="nofollow">6.638s</a></td>
+    </tr>
+    <tr>
+        <td>Single <a href="http://www.msnbc.msn.com/id/38082645/ns/world_news-americas/" title="Drug war casts pall on Mexican elections">story</a> on MSNBC</td>
+		<td>9</td>
+        <td><a href="http://www.webpagetest.org/result/100704_454f2eb62ebb00ef25cef5674f00082e/" rel="nofollow">12.064s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_454f2eb62ebb00ef25cef5674f00082e/" rel="nofollow">4.191s</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://www.washingtonpost.com/">The Washington Post</a></td>
+		<td>316</td>
+        <td><a href="http://www.webpagetest.org/result/100704_cfba18748623f2dc7253bddd0b22792e/" rel="nofollow">9.878s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_cfba18748623f2dc7253bddd0b22792e/" rel="nofollow">3.828s</a></td>
+    </tr>
+    <tr>
+        <td>Single <a href="http://www.washingtonpost.com/wp-dyn/content/article/2010/07/02/AR2010070204042.html" title="Post policies fuel reader confusion on when writers can offer opinion">story</a> on WaPo</td>
+		<td>316</td>
+        <td><a href="http://www.webpagetest.org/result/100704_5f358d626dd80e82baae102a87306cd4/" rel="nofollow">15.435s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_5f358d626dd80e82baae102a87306cd4/" rel="nofollow">4.530s</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://abcnews.go.com/">ABC News</a></td>
+		<td>492</td>
+        <td><a href="http://www.webpagetest.org/result/100704_195213d99f8ad424f594121ce0d90ec4/" rel="nofollow">14.761s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_195213d99f8ad424f594121ce0d90ec4/" rel="nofollow">4.205s</a></td>
+    </tr>
+    <tr>
+        <td>Single <a href="http://abcnews.go.com/International/wireStory?id=11082548" title="Van Der Sloot Files Suit Against Initial Lawyer">story</a> on ABC News</td>
+		<td>492</td>
+        <td><a href="http://www.webpagetest.org/result/100704_1e67db2628f0d62d3440f9c91d648986/" rel="nofollow">8.697s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_1e67db2628f0d62d3440f9c91d648986/" rel="nofollow">3.037s</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://www.rollingstone.com/">RollingStone</a></td>
+		<td>3,376</td>
+        <td><a href="http://www.webpagetest.org/result/100703_66004c5f83aedb432a3def54da60a187/" rel="nofollow">18.700s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_66004c5f83aedb432a3def54da60a187/" rel="nofollow">3.572s</a></td>
+    </tr>
+    <tr>
+        <td>An <a href="http://www.rollingstone.com/politics/matt-taibbi/blogs/TaibbiData_May2010/122137/83512">article</a> on RollingStone</td>
+		<td>3,376</td>
+        <td><a href="http://www.webpagetest.org/result/100703_23498c0f96dc6fa6e1f9c415f3b8c100/" rel="nofollow">10.707s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100703_23498c0f96dc6fa6e1f9c415f3b8c100/" rel="nofollow">2.905s</a></td>
+    </tr>
+    <tr>
+        <td><a href="http://www.foxnews.com/">Fox News</a></td>
+		<td>201</td>
+        <td><a href="http://www.webpagetest.org/result/100704_6caae51946f1b26a66543f08c2c2aaa9/" rel="nofollow">26.755s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_6caae51946f1b26a66543f08c2c2aaa9/" rel="nofollow">8.761s</a></td>
+    </tr>
+    <tr>
+        <td>Single <a href="http://www.foxnews.com/world/2010/07/03/van-der-sloot-files-suit-lawyer-charging-posing-public-defender/" title="Van der Sloot files suit against first lawyer, charging him with posing as public defender">story</a> on Fox News</td>
+		<td>201</td>
+        <td><a href="http://www.webpagetest.org/result/100704_17b7f402a9d40f3a694a899b8919e371/" rel="nofollow">16.281s</a></td>
+        <td><a href="http://www.webpagetest.org/result/100704_17b7f402a9d40f3a694a899b8919e371/" rel="nofollow">5.839s</a></td>
+    </tr>
+</table>
+<strong><em>The Sajal Kayan award</em> for excellence in web development goes to <em>FOX News</em></strong>
+Test conditions :-
+<ul>
+    <li><em>First View</em> is simulated to act as the first time the visitor visits the website, the <em>Repeat view</em> is when the user visits the website again after a while, probably closes and reopens the browser in between.</li>
+    <li>All tests were done on <a href="http://www.microsoft.com/windows/internet-explorer/default.aspx">Internet Explorer 8</a>. Yes, I know you hate IE, I hate it more than you! But since the majority of the web uses this browser we test on IE8. Also IE8 performs significantly better than its predecessors. Some of the sites tested may take upto 2x the time to load on IE7 due to lower parallel downloads per host.</li>
+    <li>The tests were done from a test machine in Dulles, VA Provided by <a href="http://dev.aol.com/">AOL</a> set to work at DSL speeds(1500 Kbps down, 384 Kbps up and 50ms latency)</li>
+    <li>The timings above show when the <em>window.onload</em> event was triggered. It is possible that the page was usable well before that. Very rarely is also possible that for the page needs to do more stuff after onload in order to be usable.</li>
+    <li>Each test was repeated 5 times and its average was taken</li>
+    <li>I have tried to be as fair as possible in selection of pages for the test. I didnt use pages filled with videos/many images, etc.</li>
+    <li>Tests were conducted during this weekend(July 3rd and 4th) so traffic to those site would be much lower than usual.</li>
+</ul>
+
+You can see from the table above, that except for <em>Google News</em>, <em>Yahoo! News</em> and (to some extent) <em>The New York Times</em> and <em>BBC</em>, all other websites have not yet given a minute of thought on Frontend performance of their web pages. This needs to change. Even one of the biggest evangalist of Frontend performance Google, <a href="http://www.webpagetest.org/result/100704_ba30dd802cd14323a2e2e840034cf0ce/5/performance_optimization/" rel="nofollow">forgot</a> to set correct cache control headers for images on Google News.
+
+I place more emphasis on individual story pages since those are the pages which a first time user would encounter first - coming via search, links, tweets etc...
+
+Now, when browsing un-optimized sites from Thailand, the load times increased exponentially due to a much higher latency and occasional packet loss.
+
+Finally! compare each of the above link <a href="http://www.webpagetest.org/video/compare.php?tests=100704_WZY,100704_WZZ,100704_X00,100704_X01,100704_X02,100704_X03,100704_X04,100704_X05,100704_X06,100704_X07,100704_X08,100704_X09,100704_X0A,100704_X0B,100704_X0C,100704_X0D,100704_X0E,100704_X0F,100704_X0G,100704_X0H,100704_X0J,100704_X0K,100704_X0M,100704_X0N,100704_X0P,100704_X0Q,100704_X0R,100704_X0S,100704_X0T,100704_X0V,100704_X0W,100704_X0X,100704_X0Y" rel="nofollow">visually in IE7 in video mode</a>. WaPo single story is missing due to a bug. For each URL, 3 first-view tests will be run from 'Dulles, VA - IE7' and the median run will be used for comparison.
+
+<h4>How to improve?</h4>
+
+Essential reading :-
+<ul>
+    <li><a href="http://developer.yahoo.com/performance/rules.html">Yahoo! : Best Practices for Speeding Up Your Web Site</a></li>
+    <li><a href="http://code.google.com/speed/page-speed/docs/rules_intro.html">Google : Web Performance Best Practices</a></li>
+    <li><a href="http://ronnysnewyorkpizza.com/about.html">This awesome list of tools</a></li>
+</ul>
+
+An optimizers goal should not be simply to get the total load time low. Thats important, but more important is the time in which the website kinda becomes usable. This for a news publishing site is being able to display the title and body of the story. The user can start reading the content while other parts of the website loads. This for <a href="http://www.thaindian.com/">Thaindian News</a> story page hovers around 0.9 to 1.5 seconds!

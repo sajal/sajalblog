@@ -1,0 +1,46 @@
+{
+    "tags": [
+        "Chalo Thailand", 
+        "CMS", 
+        "Drupal", 
+        "Joomla", 
+        "SEO"
+    ], 
+    "url": "/drupal-rulez-joomls-sux.html", 
+    "title": "Drupal rulez Joomla sux!", 
+    "draft": false, 
+    "date": "Wed, 06 Feb 2008 17:25:17 +0000", 
+    "categories": [
+        "Drupal"
+    ]
+}
+<img src="/wp-content/uploads/2008/02/drupliconsmall.png" alt="Drupal Logo" align="left" border="0" vspace="10" hspace="10" />I am perhaps the newest entrant to the growing number of Drupal fanboys in Thailand. From what Ive seen most geeks in Thailand use drupal, usually for community building projects and also for personal blogs.
+
+The first I was introduced to Drupal was while chatting with <a href="http://www.johnberns.com/2008/02/10/my-first-drupal-convert/" title="Converted me to Drupal">John Berns</a> and <a href="http://sugree.com/">Sugree</a> on the <a href="http://www.barcampbangkok.org/">BarcampBangkok</a> IRC room. In a short chat session, these two people managed to convince me that Drupal can easily do the stuff ive been trying/wanting to do for the last 2 Years.
+
+The worst thing about Joomla is that to do many things, you need to get your hands dirty and hack the core files. This for people like me is not good at all. I am a very untidy person, often leave the hacks un-commented and never document my changes. Now, when the next version of Joomla (or some components) come by, Im unable to upgrade due to the fear of breaking my hacks. This blocks me from taking advantage of the latest security patches or code improvements.
+
+Some might say that Joomla is more user friendly, I disagree. <strong>The only way in which Joomla is better than Drupal is in looks</strong>. Joomla is more of eye candy. Drupal presents a very simple admin interface, all the admin functions is available from the "/admin" page, whereas in Joomla I would need to navigate complex menus n stuff to get to where I wanna be.
+
+<strong>The USP for Drupal is its taxonomy system</strong>. It effectively gives me the power to categorize my content however I want it. Unlike Joomla where we have only a "Section" and a "Category", only 2 levels deep, and one category can be only inside one section, no <em>one-to-many</em> relationships.
+
+<!--more-->Let me give a small example : I am making our travel portal <strong><a href="http://www.chalothailand.com/" title="Travel to Thailand">Chalo Thailand</a></strong> in Drupal. I want to be able to list information on various destinations (eg Cities or Towns). Then I would also need to list down various tips specific to that town, What places to see, recommended hotels, travel packages, etc. Would be a hell of a task doing this on Joomla! it be copy/pasting... linking... for months, still not get the site ready.
+
+Here what I have done is made 2 vocabularies "<strong>Destination</strong>" and "<strong>Guide</strong>".
+
+Destination would contain terms like "<strong>Bangkok</strong>", "<strong>Pattaya</strong>", etc...
+
+Guide would contain : "<strong>Getting Around</strong>", "<strong>Sight Seeing</strong>", "<strong>Shopping Tips</strong>", etc
+
+Now on the page listing introduction about <strong>Bangkok</strong>, I can easily list getting around tips with this few lines of code (don't get scared. the code is really easy, even non php coder like me can figure it out):-
+<pre lang="php">
+&lt;h3&gt;Getting Around in Bangkok&lt;/h3&gt;
+&lt;?php
+$myNodes = taxonomy_select_nodes(array(6,7),"and");
+echo node_title_list($myNodes)
+?&gt;</pre>
+<strong>taxonomy_select_nodes(array(6,7),"and")</strong> selects node (any content) which has terms 6 AND 7 specified. 6 states the the <strong>Guide</strong> is <strong>Getting Around</strong> and 7 means that the <strong>Destination</strong> is <strong>Bangkok</strong>. Now I can happily add a new Getting around article for Bangkok and it would automagically show up in the Bangkok introduction page. Another neat advantage of this would be when im listing travel packages. A person viewing details of a "Sight Seeing" location, can see the list of Tour Packages which include this venue. On clicking on a particular Package, they can see the list of Sight-Seeing Venues which are included in this package. <strong>This is something which is not there in Joomla</strong> (please forgive me if some add on component does this, but chances are there that it would be crappy or some non-seo friendly hack).
+
+The bottom line is that <strong>Drupal is better than Joomla</strong> in every aspect. <strong>You do not need to be a PHP coder to use Drupal</strong>. In fact you can do more in Drupal than Joomla without touching PHP. With some knowledge of PHP combined with Drupal (<a href="http://blog.venture-skills.co.uk/2007/01/08/cck-views-the-ultimate-combination-part-1/" title="CCK &amp; Views the ultimate combination - part 1" target="_blank">CCK+views</a>) and some time you can effectively make any kind of portal system.
+
+Enough of ranting for today, back to kicking myself in the ass for not starting my <a href="http://www.thaindian.com" title="Indians in Thailand">main portal</a> in Drupal.
