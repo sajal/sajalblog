@@ -8,6 +8,36 @@
   <h1>{{ .Title }}</h1>
   <span class="post-date">{{ .Date.Format "Mon, Jan 2, 2006" }}</span>
       {{ .Content }}
+      {{ if eq .Type "post" }}
+      <div>
+  Tags: {{ range .Params.tag }} 
+    <a href="tag/{{ . | lower | urlize }}">{{ . }}</a> </li>
+  {{ end }} <br />
+  Categories: {{ range .Params.category }} 
+    <a href="category/{{ . | lower | urlize }}">{{ . }}</a> </li>
+  {{ end }} <br />
+
+</div>
+      <div id="disqus_thread"></div>
+<script type="text/javascript">
+		/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+		var disqus_shortname = 'sajal';
+		var disqus_title = '{{ .Title }}';
+		var disqus_url = 'http://www.sajalkayan.com{{ .RelPermalink }}';
+
+		/* * * DON'T EDIT BELOW THIS LINE * * */
+		(function(w, d, s) {
+			function go(){
+				var dsq = d.createElement(s); 
+				dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+				(d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild(dsq);
+			}
+		if (w.addEventListener) { w.addEventListener("load", go, false); }
+		else if (w.attachEvent) { w.attachEvent("onload",go); }
+		}(window, document, 'script'));
+
+</script>
+      {{end}}
 </div>
 </div>
 
