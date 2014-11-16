@@ -11,3 +11,5 @@ The site is built using <a href="http://gohugo.io/">Hugo</a>.
 
 Source repo : <a href="https://github.com/sajal/sajalblog">https://github.com/sajal/sajalblog</a> <br />
 Built pages : <a href="https://github.com/sajal/sajal.github.io">https://github.com/sajal/sajal.github.io</a>
+
+Some links, especially RSS URLs might be broken currently.
