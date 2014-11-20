@@ -6,7 +6,20 @@
     <div class="content container">
 <div class="post">
   <h1>{{ .Title }}</h1>
-  <span class="post-date">{{ .Date.Format "Mon, Jan 2, 2006" }}</span>
+  <span class="post-date">
+    {{ .Date.Format "Mon, Jan 2, 2006" }}
+    {{ if eq .Type "post" }}
+    <a 
+      class="twitter-share-button" 
+      href="https://twitter.com/share"
+      data-via="sajal"
+      data-text="{{ .Title }}" 
+      data-url="http://www.sajalkayan.com{{ .RelPermalink }}"
+      >
+      Tweet
+    </a>
+    {{ end }}
+  </span>
       {{ .Content }}
       {{ if eq .Type "post" }}
       <div>
@@ -36,6 +49,9 @@
 		else if (w.attachEvent) { w.attachEvent("onload",go); }
 		}(window, document, 'script'));
 
+</script>
+<script type="text/javascript">
+window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id)){return}js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);return window.twttr||(t={_e:[],ready:function(f){t._e.push(f)}})}(document,"script","twitter-wjs"));
 </script>
       {{end}}
 </div>
