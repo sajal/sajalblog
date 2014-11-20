@@ -75,7 +75,7 @@ A destination server is remote end of our socks tunnel. It's job is to service t
 
 This needs to run a [MultiPath TCP kernel](http://multipath-tcp.org/pmwiki.php/Users/HowToInstallMPTCP?). On EC2 it is pretty simple. Launch an Ubuntu 14.04 instance with a [pv-grub AKI](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/UserProvidedKernels.html). Then follow the [apt-repository installation method](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/UserProvidedKernels.html). And ensure the grub loads the mptcp kernel as its first choice.
 
-Next we also need shadowsocks server running. [RTFM](https://github.com/shadowsocks/shadowsocks-go/blob/master/README.md) its pretty simple.
+Next we also need shadowsocks server running. [RTFM](https://github.com/shadowsocks/shadowsocks-go/blob/master/README.md) its pretty simple. Before using shadowsocks I was using a simple `ssh -D` tunnel, but I found it to be inefficient. Often times one large transfer would make all other TCP streams *stuck*. Perhaps this has something to do with the fact that with SSH everything is happening over a single TCP stream whereas shadowsocks makes a new socks connection dedicated to each TCP connection.
 
 #### Gateway
 
