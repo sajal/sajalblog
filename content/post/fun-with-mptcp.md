@@ -51,6 +51,17 @@ APU <--> Dtac 3G Directly <--> EC2 (Optional/ondemand)
 
 Now I have 5 possible paths. mptcp kernel creates a TCP connection over each available paths and bonds them together and exposes it as a single TCP connection to the application. Packets are sent over paths that currently have the lowest delay. Now my available bandwidth is not impacted by congestion over some of these paths. All paths need to be congested for me to have a bad day... Also some path might have good uplink, some might have good downlink, with mptcp you mix the best of both...
 
+Example `bmon` stats when downloading a large file (I removed irreverent interfaces.)
+<pre style="overflow-x:scroll;overflow-wrap: normal;white-space: pre;">
+  #   Interface                RX Rate         RX #     TX Rate         TX #
+─────────────────────────────────────────────────────────────────────────────
+xxx (source: local)
+  0   tun1                     621.28KiB        628      38.82KiB        636
+  3   tun3                     200.22KiB        198       9.42KiB        149
+  5   ppp0                       1.07MiB       1018     119.42KiB        980
+  9   tun0                      90.06KiB         90       5.94KiB         97
+</pre>
+
 ### Configurations
 
 #### Jumpbox
