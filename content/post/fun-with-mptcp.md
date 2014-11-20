@@ -17,7 +17,7 @@ MultiPath TCP is an interesting effort to use multiple interfaces/networks for a
 Old way
 -------
 
-![Alt text](/images/ssh_tun.svg "Simple SSH Tunnel")
+<a href="/images/ssh_tun.svg"><img src="/images/ssh_tun.svg" alt="Simple SSH Tunnel" title="Simple SSH Tunnel" \></a>
 
 1. SSH tunnel to EC2 instance in Singapore. Browser configured to use this tunnel as proxy
 2. SSH tunnel to EC2 instance in us-east (for accessing geo-blocked services)
@@ -27,7 +27,7 @@ Main drawback : If my ISP has issues talking to AWS, then I'm totally screwed. T
 New way
 -------
 
-![Alt text](/images/mptcp_tun.svg "Simple SSH Tunnel")
+<a href="/images/mptcp_tun.svg"><img src="/images/mptcp_tun.svg" alt="MPTCP Tunnel" title="MPTCP Tunnel" \></a>
 
 Note: This is a constantly evolving setup as I find new things to play with.
 
