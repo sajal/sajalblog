@@ -7,9 +7,7 @@ tag = ["mptcp", "tcp", "network"]
 
 Over the last few months I've been playing with [MultiPath TCP](http://multipath-tcp.org/) and in this post I will show how I use it to leverage my humble [True ADSL](http://trueonline.truecorp.co.th/) line at home.
 
-For performance and security reasons, I tunnel all my traffic thru a VPN. This is not necessarily to circumvent censorship, but to circumvent the [evil transparent proxies](http://www.sajalkayan.com/4-reasons-why-i-love-my-isp.html) my ISP puts in middle. The total bandwidth available is xxxx kbps down / xxx kbps up.
-
-TODO: Image
+For performance and security reasons, I tunnel all my traffic thru a VPN. This is not necessarily to circumvent censorship, but to circumvent the [evil transparent proxies](http://www.sajalkayan.com/4-reasons-why-i-love-my-isp.html) my ISP puts in middle. The total bandwidth available is 10,600 kbps down / 1,200 kbps up.
 
 Introduction to MultiPath TCP
 -----------------------------
@@ -19,7 +17,7 @@ MultiPath TCP is an interesting effort to use multiple interfaces/networks for a
 Old way
 -------
 
-TODO: Image
+![Alt text](/images/ssh_tun.svg "Simple SSH Tunnel")
 
 1. SSH tunnel to EC2 instance in Singapore. Browser configured to use this tunnel as proxy
 2. SSH tunnel to EC2 instance in us-east (for accessing geo-blocked services)
@@ -29,7 +27,7 @@ Main drawback : If my ISP has issues talking to AWS, then I'm totally screwed. T
 New way
 -------
 
-TODO: Image
+![Alt text](/images/mptcp_tun.svg "Simple SSH Tunnel")
 
 Note: This is a constantly evolving setup as I find new things to play with.
 
@@ -51,7 +49,7 @@ APU <--> True ADSL <--> via CAT VPS over OpenVPN/UDP <--> EC2
 APU <--> True ADSL <--> via DO Singapore over OpenVPN/UDP <--> EC2  
 APU <--> Dtac 3G Directly <--> EC2 (Optional/ondemand)
 
-Now I have 5 possible paths. mptcp kernel creates a TCP connection over each available paths and bonds them together and exposes it as a single TCP connection to the application. Packets are sent over paths that currently have the lowest delay. Now my available bandwidth is not impacted by congestion over some of these paths. All paths need to be congested for me to have a bad day...
+Now I have 5 possible paths. mptcp kernel creates a TCP connection over each available paths and bonds them together and exposes it as a single TCP connection to the application. Packets are sent over paths that currently have the lowest delay. Now my available bandwidth is not impacted by congestion over some of these paths. All paths need to be congested for me to have a bad day... Also some path might have good uplink, some might have good downlink, with mptcp you mix the best of both...
 
 ### Configurations
 
