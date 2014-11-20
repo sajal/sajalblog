@@ -37,7 +37,7 @@ Infrastructure involved :-
 
 - <a href="http://www.pcengines.ch/apu.htm">PC Engines APU system board</a> - Replaces router. All magic happens here. *gateway*
 - ADSL modem in bridge mode.
-- EC2 instance in Singapore - The main proxy endpoint. Runs [shadowsocks](https://github.com/shadowsocks/shadowsocks-go) server over mptcp kernel. *destination 1, jumpbpx 1*
+- EC2 instance in Singapore - The main proxy endpoint. Runs [shadowsocks](https://github.com/shadowsocks/shadowsocks-go) server over mptcp kernel. *destination 1, jumpbox 1*
 - EC2 instance in us-west - The proxy endpoint for US geo blocked traffic. Runs shadowsocks server over mptcp kernel. *destination 2*
 - Digital Ocean instance in Singapore - An alternate path to reach the EC2 instance(s) *jumpbox 2*
 - VPS in [CAT](http://www.cattelecom.com/) datacenter in Thailand - Another alternate path. *jumpbox 3*
