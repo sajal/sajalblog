@@ -1,5 +1,5 @@
 +++
-date = "Sun Nov 16 18:43:03 UTC 2014"
+date = "Sun, 16 Nov 2014 18:43:03 +0000"
 draft = false
 title = "Moved blog to github pages"
 tag = ["hugo", "Github pages"]
