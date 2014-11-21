@@ -52,7 +52,7 @@ APU <--> Dtac 3G Directly <--> EC2 (Optional/ondemand)
 Now I have 5 possible paths. mptcp kernel creates a TCP connection over each available paths and bonds them together and exposes it as a single TCP connection to the application. Packets are sent over paths that currently have the lowest delay. Now my available bandwidth is not impacted by congestion over some of these paths. All paths need to be congested for me to have a bad day... Also some path might have good uplink, some might have good downlink, with mptcp you mix the best of both...
 
 Example `bmon` stats when downloading a large file (I removed irreverent interfaces.)
-<pre style="overflow-x:scroll;overflow-wrap: normal;white-space: pre;">
+<pre style="overflow-x:scroll;overflow-wrap: normal;white-space: pre;" id="bmon">
   #   Interface                RX Rate         RX #     TX Rate         TX #
 ─────────────────────────────────────────────────────────────────────────────
 xxx (source: local)
@@ -90,7 +90,7 @@ Next we also need shadowsocks server running. [RTFM](https://github.com/shadowso
 
 #### Gateway
 
-The gateway is the most complicated component. All the magic happens here. A lot of services run here. I will not elaborate on some of them.
+The gateway is the most complicated component. Running stock Debian wheezy with mptcp kernel installed via their [apt repository](http://multipath-tcp.org/pmwiki.php/Users/AptRepository). A lot of services run here. I will not elaborate on some of them.
 
 **dbcpd** - Assign LAN users with IP
 
@@ -183,7 +183,7 @@ All local services are scoped to listen only on local interfaces to avoid random
 
 **redsocks** - Accepts intercepted connections and pipes it off to shadowsocks client
 
-**shadowsocks client** - sends all TCP connections to shadowsocks server running in EC2 Singapore.
+**shadowsocks client** - sends all TCP connections to shadowsocks servers running in EC2 Singapore and US. By default intercepted traffic is sent to Singapore, however any application on any computer in the network could be set to explicitly use any of the available proxies.
 
 **wvdial** - To dial the ADSL connection which is itself behind a [Carrier-grade NAT](http://en.wikipedia.org/wiki/Carrier-grade_NAT). Sometimes the connection stops working while pppd things its still connected. Am ugly CRON script to test the network and flip it if needed.
 
@@ -220,7 +220,7 @@ There are some issues I am having that I need to sort out work-around for.
 
 - **Default connection unstable**. If the initial syn packet for ppp0 (my default interface) fails, then the connection cant be established. I need to look deeper into mptcp docs to figure out how to make it such that if the initial TCP connection setup fails on ppp0 then make it try tun0, tun1 and so on.
 - **Connection fairness**. Sometimes if I am doing a big upload, everything else (like browsing websites) seems too slow. The upload is hogging all the available uplink, which is already too tiny. I have my suspicions on buffer bloat...
-- **Higher uplink usage**. When downloading something, I see > 10% upload traffic corresponding to it. This is lot higher than a simple setup. I need to investigate deeper whats causing it. Perhaps mptcp or the socks setup or OpenVPN.
+- **Higher uplink usage**. When downloading something, I see ~10% upload traffic corresponding to it. This is lot higher than a simple setup. I need to investigate deeper whats causing it. Perhaps mptcp or the socks setup or OpenVPN. The [example bmon stats](#bmon) above show this as well 119.42KiB uplink while downloading @ 1.07MiB.
 
 Future path enhancements
 ------------------------
