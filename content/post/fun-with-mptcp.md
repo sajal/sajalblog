@@ -167,13 +167,15 @@ Interfaces
 
 Also, each interface is maintains its own [routing tables](http://multipath-tcp.org/pmwiki.php/Users/ConfigureRouting) using if-up scripts. For example this is what gets executed when one of the tunnels comes alive.
 
-<pre style="overflow-x:scroll;overflow-wrap: normal;white-space: pre;">
+{{% highlight bash %}}
+```
 #!/bin/sh
 ip rule add from 10.8.0.20 table 2 || true
 ip route add 10.8.0.0/24 dev tun0 scope link table 2 || true
 ip route add default via 10.8.0.21 dev tun0 table 2 || true
 ip rule add fwmark 3 table 2 || true
-</pre>
+```
+{{% /highlight %}}
 
 The fwmark is added so if in future I want to pipe different traffic to go thru this interface I can set the corresponding iptables rule.
 
