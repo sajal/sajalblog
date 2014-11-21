@@ -33,21 +33,23 @@ Note: This is a constantly evolving setup as I find new things to play with.
 
 Infrastructure involved :-
 
-- <a href="http://www.pcengines.ch/apu.htm">PC Engines APU system board</a> - Replaces router. All magic happens here. *gateway*
-- ADSL modem in bridge mode.
-- EC2 instance in Singapore - The main proxy endpoint. Runs [shadowsocks](https://github.com/shadowsocks/shadowsocks-go) server over mptcp kernel. *destination 1, jumpbox 1*
-- EC2 instance in us-west - The proxy endpoint for US geo blocked traffic. Runs shadowsocks server over mptcp kernel. *destination 2*
-- Digital Ocean instance in Singapore - An alternate path to reach the EC2 instance(s) *jumpbox 2*
-- VPS in [CAT](http://www.cattelecom.com/) datacenter in Thailand - Another alternate path. *jumpbox 3*
-- Android phone - With Dtac 3G for extra boost when needed. USB tethering. Bandwidth fluctuates a lot. I typically use it to get a boost in my upload bandwidth which is generally 100 kbps to 2 mbps.
+- **<a href="http://www.pcengines.ch/apu.htm">PC Engines APU system board</a>** - Replaces router. All magic happens here. *gateway*
+- **ADSL modem** in bridge mode.
+- **EC2 instance in Singapore** - The main proxy endpoint. Runs [shadowsocks](https://github.com/shadowsocks/shadowsocks-go) server over mptcp kernel. *destination 1, jumpbox 1*
+- **EC2 instance in us-west** - The proxy endpoint for US geo blocked traffic. Runs shadowsocks server over mptcp kernel. *destination 2*
+- **Digital Ocean instance in Singapore** - An alternate path to reach the EC2 instance(s) *jumpbox 2*
+- **VPS in [CAT](http://www.cattelecom.com/) datacenter** in Thailand - Another alternate path. *jumpbox 3*
+- **Android phone** - With Dtac 3G for extra boost when needed. USB tethering. Bandwidth fluctuates a lot. I typically use it to get a boost in my upload bandwidth which is generally 100 kbps to 2 mbps.
 
 All tcp Traffic is intercepted by the APU using iptables, diverted to [redsocks](http://darkk.net.ru/redsocks/), which sends it to the shadowsocks client, which sends it to the shadowsocks server running in EC2 Singapore. This socks connection has several ways to communicate with the EC2 instance.
 
+```
 APU <--> True ADSL Directly <--> EC2  
 APU <--> True ADSL Directly over OpenVPN/UDP <--> EC2  
 APU <--> True ADSL <--> via CAT VPS over OpenVPN/UDP <--> EC2  
 APU <--> True ADSL <--> via DO Singapore over OpenVPN/UDP <--> EC2  
 APU <--> Dtac 3G Directly <--> EC2 (Optional/ondemand)
+```
 
 Now I have 5 possible paths. mptcp kernel creates a TCP connection over each available paths and bonds them together and exposes it as a single TCP connection to the application. Packets are sent over paths that currently have the lowest delay. Now my available bandwidth is not impacted by congestion over some of these paths. All paths need to be congested for me to have a bad day... Also some path might have good uplink, some might have good downlink, with mptcp you mix the best of both...
 
@@ -221,6 +223,7 @@ There are some issues I am having that I need to sort out work-around for.
 - **Default connection unstable**. If the initial syn packet for ppp0 (my default interface) fails, then the connection cant be established. I need to look deeper into mptcp docs to figure out how to make it such that if the initial TCP connection setup fails on ppp0 then make it try tun0, tun1 and so on.
 - **Connection fairness**. Sometimes if I am doing a big upload, everything else (like browsing websites) seems too slow. The upload is hogging all the available uplink, which is already too tiny. I have my suspicions on buffer bloat...
 - **Higher uplink usage**. When downloading something, I see ~10% upload traffic corresponding to it. This is lot higher than a simple setup. I need to investigate deeper whats causing it. Perhaps mptcp or the socks setup or OpenVPN. The [example bmon stats](#bmon) above show this as well 119.42KiB uplink while downloading @ 1.07MiB.
+- **EC2 bandwidth is expensive**. I would like to use Digital Ocean boxes for socks proxies. This is a little tricky since DO does not allow loading custom kernels. I need to figure out [kexec](https://en.wikipedia.org/wiki/Kexec) to make this possible. Unsure if this way is stable...
 
 Future path enhancements
 ------------------------
