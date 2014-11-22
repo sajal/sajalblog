@@ -1,18 +1,18 @@
 +++
-date = "2014-11-20T23:22:19+07:00"
-draft = true
+date = "2014-11-22T12:46:11+00:00"
+draft = false
 title = "Fun with MultiPath TCP"
 tag = ["mptcp", "tcp", "network"]
 +++
 
 Over the last few months I've been playing with [MultiPath TCP](http://multipath-tcp.org/) and in this post I will show how I use it to leverage my humble [True ADSL](http://trueonline.truecorp.co.th/) line at home.
 
-For performance and security reasons, I tunnel all my traffic thru a VPN. This is not necessarily to circumvent censorship, but to circumvent the [evil transparent proxies](http://www.sajalkayan.com/4-reasons-why-i-love-my-isp.html) my ISP puts in middle. The total bandwidth available is 10,600 kbps down / 1,200 kbps up.
+For performance and security reasons, I tunnel all my traffic thru a VPN. This is not necessarily to circumvent censorship, but to circumvent the [evil transparent proxies](http://www.sajalkayan.com/4-reasons-why-i-love-my-isp.html) my ISP puts in middle. The total bandwidth available is ~10 mbps down / ~1 mbps up.
 
 Introduction to MultiPath TCP
 -----------------------------
 
-MultiPath TCP is an interesting effort to use multiple interfaces/networks for any single TCP connection. A Linux kernel implementation is being developed at [multipath-tcp.org](http://multipath-tcp.org/). Its main use cases are for mobile (transition between wifi and 3G) and datacenters. I exploit it to get better Internet browsing experience.
+MultiPath TCP is an interesting effort to use multiple interfaces/networks for any single TCP connection. A Linux kernel implementation is being developed at [multipath-tcp.org](http://multipath-tcp.org/). Its main use cases are for mobile (transition between Wi-Fi and 3G) and datacenters. I exploit it to get better Internet browsing experience.
 
 Old way
 -------
@@ -35,13 +35,13 @@ Infrastructure involved :-
 
 - **<a href="http://www.pcengines.ch/apu.htm">PC Engines APU system board</a>** - Replaces router. All magic happens here. *gateway*
 - **ADSL modem** in bridge mode.
-- **EC2 instance in Singapore** - The main proxy endpoint. Runs [shadowsocks](https://github.com/shadowsocks/shadowsocks-go) server over mptcp kernel. *destination 1, jumpbox 1*
-- **EC2 instance in us-west** - The proxy endpoint for US geo blocked traffic. Runs shadowsocks server over mptcp kernel. *destination 2*
-- **Digital Ocean instance in Singapore** - An alternate path to reach the EC2 instance(s) *jumpbox 2*
-- **VPS in [CAT](http://www.cattelecom.com/) datacenter** in Thailand - Another alternate path. *jumpbox 3*
-- **Android phone** - With Dtac 3G for extra boost when needed. USB tethering. Bandwidth fluctuates a lot. I typically use it to get a boost in my upload bandwidth which is generally 100 kbps to 2 mbps.
+- **EC2 instance in Singapore** - The main proxy endpoint. Runs [shadowsocks](https://github.com/shadowsocks/shadowsocks-go) server over MPTCP kernel. *destination, jumpbox*
+- **EC2 instance in us-west** - The proxy endpoint for US geo blocked traffic. Runs shadowsocks server over MPTCP kernel. *destination*
+- **Digital Ocean instance in Singapore** - An alternate path to reach the EC2 instance(s) *jumpbox*
+- **VPS in [CAT](http://www.cattelecom.com/) datacenter** in Thailand - Another alternate path. All Thai ISPs usually have good connectivity to CAT. *jumpbox*
+- **Android phone** - With Dtac 3G for extra boost when needed. USB tethering. Bandwidth fluctuates a lot. I typically use it to get a boost in my upload bandwidth which is generally 100 kbps to 8 mbps.
 
-All tcp Traffic is intercepted by the APU using iptables, diverted to [redsocks](http://darkk.net.ru/redsocks/), which sends it to the shadowsocks client, which sends it to the shadowsocks server running in EC2 Singapore. This socks connection has several ways to communicate with the EC2 instance.
+All TCP Traffic is intercepted by the APU using iptables, diverted to [redsocks](http://darkk.net.ru/redsocks/), which sends it to the shadowsocks client, which sends it to the shadowsocks server running in EC2 Singapore. This socks connection has several ways to communicate with the EC2 instance.
 
 ```
 APU <--> True ADSL Directly <--> EC2  
@@ -51,7 +51,7 @@ APU <--> True ADSL <--> via DO Singapore over OpenVPN/UDP <--> EC2
 APU <--> Dtac 3G Directly <--> EC2 (Optional/ondemand)
 ```
 
-Now I have 5 possible paths. mptcp kernel creates a TCP connection over each available paths and bonds them together and exposes it as a single TCP connection to the application. Packets are sent over paths that currently have the lowest delay. Now my available bandwidth is not impacted by congestion over some of these paths. All paths need to be congested for me to have a bad day... Also some path might have good uplink, some might have good downlink, with mptcp you mix the best of both...
+Now I have 5 possible paths. MPTCP kernel creates a TCP connection over each available path and bonds them together and exposes it as a single TCP connection to the application. Packets are sent over paths that currently have the lowest delay. Now my available bandwidth is not impacted by congestion over some of these paths. All paths need to be congested for me to have a bad day... Also some path might have good uplink, some might have good downlink, with MPTCP you mix the best of both...
 
 Example `bmon` stats when downloading a large file (I removed irreverent interfaces.)
 <pre style="overflow-x:scroll;overflow-wrap: normal;white-space: pre;" id="bmon">
@@ -68,7 +68,7 @@ xxx (source: local)
 
 #### Jumpbox
 
-Jumpbox is pretty basic setup. It's role is to provide additional gateways which mptcp uses to build additional paths.
+Jumpbox is pretty basic setup. It's role is to provide additional gateways which MPTCP uses to build additional paths.
 
 OpenVPN server configured normally. Set to not redirect default gateway. In my current setup I need to ensure that the server assigns the same IP to my client. This is not really that crucial, but it keeps things simple. Its important to configure each jumpbox to use a different IP range.
 
@@ -86,13 +86,13 @@ Replace the `tun0` and `eth0` to suit your environment.
 
 A destination server is remote end of our socks tunnel. It's job is to service the socks connections patching them to the real destination. 
 
-This needs to run a [MultiPath TCP kernel](http://multipath-tcp.org/pmwiki.php/Users/HowToInstallMPTCP?). On EC2 it is pretty simple. Launch an Ubuntu 14.04 instance with a [pv-grub AKI](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/UserProvidedKernels.html). Then follow the [apt-repository installation method](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/UserProvidedKernels.html). And ensure the grub loads the mptcp kernel as its first choice.
+This needs to run a [MultiPath TCP kernel](http://multipath-tcp.org/pmwiki.php/Users/HowToInstallMPTCP?). On EC2 it is pretty simple. Launch an Ubuntu 14.04 instance with a [pv-grub AKI](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/UserProvidedKernels.html). Then follow the [apt-repository installation method](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/UserProvidedKernels.html). And ensure the grub loads the MPTCP kernel as its first choice.
 
 Next we also need shadowsocks server running. [RTFM](https://github.com/shadowsocks/shadowsocks-go/blob/master/README.md) its pretty simple. Before using shadowsocks I was using a simple `ssh -D` tunnel, but I found it to be inefficient. Often times one large transfer would make all other TCP streams *stuck*. Perhaps this has something to do with the fact that with SSH everything is happening over a single TCP stream whereas shadowsocks makes a new socks connection dedicated to each TCP connection.
 
 #### Gateway
 
-The gateway is the most complicated component. Running stock Debian wheezy with mptcp kernel installed via their [apt repository](http://multipath-tcp.org/pmwiki.php/Users/AptRepository). A lot of services run here. I will not elaborate on some of them.
+The gateway is the most complicated component. Running stock Debian wheezy with MPTCP kernel installed via their [apt repository](http://multipath-tcp.org/pmwiki.php/Users/AptRepository). A lot of services run here. I will not elaborate on some of them.
 
 **dbcpd** - Assign LAN users with IP
 
@@ -160,7 +160,7 @@ COMMIT
 # Completed on Sat Nov 22 00:37:10 2014
 </pre>
 
-Note: a.b.c.d, e.f.g.h, i.j.k.l, m.n.o.p and q.r.s.t are public internet ips that I don't want redsocks to intercept.
+Note: *a.b.c.d*, *e.f.g.h*, *i.j.k.l*, *m.n.o.p* and *q.r.s.t* are public internet ips that I don't want redsocks to intercept.
 
 Interfaces
 
@@ -220,10 +220,12 @@ Missing parts
 
 There are some issues I am having that I need to sort out work-around for.
 
-- **Default connection unstable**. If the initial syn packet for ppp0 (my default interface) fails, then the connection cant be established. I need to look deeper into mptcp docs to figure out how to make it such that if the initial TCP connection setup fails on ppp0 then make it try tun0, tun1 and so on.
+- **Default connection unstable**. If the initial syn packet for ppp0 (my default interface) fails, then the connection cant be established. I need to look deeper into MPTCP docs to figure out how to make it such that if the initial TCP connection setup fails on ppp0 then make it try tun0, tun1 and so on.
 - **Connection fairness**. Sometimes if I am doing a big upload, everything else (like browsing websites) seems too slow. The upload is hogging all the available uplink, which is already too tiny. I have my suspicions on buffer bloat...
-- **Higher uplink usage**. When downloading something, I see ~10% upload traffic corresponding to it. This is lot higher than a simple setup. I need to investigate deeper whats causing it. Perhaps mptcp or the socks setup or OpenVPN. The [example bmon stats](#bmon) above show this as well 119.42KiB uplink while downloading @ 1.07MiB.
+- **Higher uplink usage**. When downloading something, I see ~10% upload traffic corresponding to it. This is lot higher than a simple setup. I need to investigate deeper whats causing it. Perhaps MPTCP or the socks setup or OpenVPN. The [example bmon stats](#bmon) above show this as well 119.42KiB uplink while downloading @ 1.07MiB.
 - **EC2 bandwidth is expensive**. I would like to use Digital Ocean boxes for socks proxies. This is a little tricky since DO does not allow loading custom kernels. I need to figure out [kexec](https://en.wikipedia.org/wiki/Kexec) to make this possible. Unsure if this way is stable...
+- **Advanced routing**. I would like to programatically decide which external IP should go thru which proxy. For example most Thai IPs I would like to go direct. Some American destinations should go thru the US proxy, rest thru Singapore proxy. Perhaps in future add an European proxy.. Currently the only way to use the American proxy is to explicitly configure a particular application to use socks proxy.
+- **UDP tunneling**. UDP traffic currently goes directly using a single OpenVPN session. There is no load-balancing being performed on it. I would like to switch to a different socks client/server. One that does [UDP associate](http://compgroups.net/comp.protocols.tcp-ip/how-socks-5-udp-associate-works/2603784).
 
 Future path enhancements
 ------------------------
@@ -231,10 +233,12 @@ Future path enhancements
 More paths can be added to get better throughput.
 
 - 3G dongles from various providers.
-- The shitty wifi that your apartment/office provider gives.
+- The shitty Wi-Fi that your apartment/office provides.
 - More ADSL/Cable connections from diverse providers with different backbones.
 
 Conclusion
 ----------
 
-MPTCP is a fantastic piece of technology. Hat-tip to everyone who contributed to it. The PC Engines ALU box is also awesome. Very powerful x86_64 box consuming very little electricity. 
+MPTCP is a fantastic piece of technology. Hat-tip to everyone who [contributed](http://multipath-tcp.org/mptcp_stats/authors.html) to it. The PC Engines ALU box is also awesome. Decent x86_64 box consuming only about 6 to 12W power.
+
+In the future I will do a walk-thru type post on how to setup a [Raspberry Pi](http://www.raspberrypi.org/) as a one-arm gateway doing a subset of what I described above. The most challenging part is getting a MPTCP enabled kernel on the pi, which requires kernel patching and compiling. The throughput will likely be very limited because MPTCP has a higher CPU overhead than regular TCP.
