@@ -1,7 +1,7 @@
 +++
 date = "2014-11-22T12:46:11+00:00"
 draft = false
-title = "Fun with MultiPath TCP"
+title = "Using MultiPath TCP to enhance home networks"
 tag = ["mptcp", "tcp", "network"]
 +++
 
