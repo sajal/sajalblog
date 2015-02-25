@@ -1,14 +1,14 @@
 +++
-date = "2015-02-25T23:30:06+07:00"
-draft = true
+date = "2015-02-25T18:14:00+00:00"
+draft = false
 title = "Running Go programs on $15 device - Beyond Hello World"
 tag = ["go", "golang", "openwrt", "mips", "WT1520"]
 +++
 
 I recently purchased a [WT1520](http://wiki.openwrt.org/toh/nexx/wt1520) router for $15 from Aliexpress to play with. I have a project in mind which would require few nodes running my custom Go code spread out throughout the world. A Raspberry Pi (almost $40 if you include SD card, etc) fits perfectly for my purpose, but I am looking to be cheap. Not to be dissing on the pi, its awesome and LOT more powerful than the WT1520, I'm just trying to find the cheapest device for my purpose.
 <figure>
-<img src="/images/wt1520-raspi.jpg" alt="Raspberry Pi and WT1520 doing the same thing" title="Raspberry Pi and WT1520 doing the same thing" \>
-<figcaption>Raspberry Pi ($35+) and WT1520 ($15 shipped) doing the same thing</figcaption>
+	<img src="/images/wt1520-raspi.jpg" alt="Raspberry Pi and WT1520 doing the same thing" title="Raspberry Pi and WT1520 doing the same thing" \>
+	<figcaption>Raspberry Pi ($35+) and WT1520 ($15 shipped) doing the same thing</figcaption>
 </figure>
 Having no experience with OpenWrt, this [blog post](http://akagi201.org/blog/golang-on-openwrt/) (sidenote: our blogs look similar) helped a lot to get Hello World running.
 
