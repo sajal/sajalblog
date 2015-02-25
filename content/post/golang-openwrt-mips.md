@@ -129,3 +129,5 @@ OpenWrt creates a 14MB tempfs, so this barely fits into /tmp of the WT1520, but 
 I think this is the cheapest off the shelf device that a Go program can run on productively.
 
 Dear Gophers: Please implement MIPS architecture within the gc toolchain so that I can build apps for these cheap devices as easily as for ARM.
+
+Next up, I will try to get my hands on [pogoplug](http://wiki.openwrt.org/toh/cloudengines/pogo-v4) . Amazon [has it](http://www.amazon.com/Pogoplug-Backup-and-Sharing-Device/dp/B005GM1Q1O/ref=sr_1_1?ie=UTF8&qid=1424886725&sr=8-1&keywords=pogoplug+mobile) for $13.69, but after including shipping and taxes it comes out to $51.30. And it doesn't seem to be something that will always be readily available at such low prices.
