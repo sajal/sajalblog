@@ -5,7 +5,7 @@ title = "Running Go programs on $15 device - Beyond Hello World"
 tag = ["go", "golang", "openwrt", "mips", "WT1520"]
 +++
 
-I recently purchased a [WT1520](http://wiki.openwrt.org/toh/nexx/wt1520) router for $15 from Aliexpress to play with. I have a project in mind which would require few nodes running my custom Go code spread out throughout the world. A Raspberry Pi (almost $40 if you include SD card, etc) fits perfectly for my purpose, but I am looking to be cheap. Not to be dissing on the pi, its awesome and LOT more powerful than the WT1520, im just trying to find the cheapest device for my purpose.
+I recently purchased a [WT1520](http://wiki.openwrt.org/toh/nexx/wt1520) router for $15 from Aliexpress to play with. I have a project in mind which would require few nodes running my custom Go code spread out throughout the world. A Raspberry Pi (almost $40 if you include SD card, etc) fits perfectly for my purpose, but I am looking to be cheap. Not to be dissing on the pi, its awesome and LOT more powerful than the WT1520, I'm just trying to find the cheapest device for my purpose.
 <figure>
 <img src="/images/wt1520-raspi.jpg" alt="Raspberry Pi and WT1520 doing the same thing" title="Raspberry Pi and WT1520 doing the same thing" \>
 <figcaption>Raspberry Pi ($35+) and WT1520 ($15 shipped) doing the same thing</figcaption>
@@ -15,7 +15,7 @@ Having no experience with OpenWrt, this [blog post](http://akagi201.org/blog/gol
 My Build Steps
 --------------
 
-I couldnt use the [gccgo fork](https://github.com/GeertJohan/openwrt-go) directly because support for my architecture was added at a later stage, so I had to clone the upstream master and patch it.
+I couldn't use the [gccgo fork](https://github.com/GeertJohan/openwrt-go) directly because support for my architecture was added at a later stage, so I had to clone the upstream master and patch it.
 
 {{% highlight bash %}}
 ```
@@ -69,7 +69,7 @@ minion.go:101:10: error: reference to undefined name 'dnsdebug'
 $ 
 ```
 
-Hmm. gccgo does not resolve packages, and we cant make the Go provided toolchain to build using our mips gccgo... so lets see what the Go toolchain does when using normal gccgo.
+Hmm. gccgo does not resolve packages, and we cant make the Go provided toolchain to build using our MIPS gccgo... so lets see what the Go toolchain does when using normal gccgo.
 
 <pre style="overflow-x:scroll;overflow-wrap: normal;white-space: pre;">
 sajal@sajal-lappy:~/go/src/github.com/turbobytes/dnsdebug$ go build -x -compiler=gccgo minion.go 
@@ -113,7 +113,7 @@ gccgo -o minion $WORK/obj/minion.o $WORK/obj/dns.o $WORK/obj/dnsdebug.o -static-
 
 It took me a while to figure out that I needed to export the .gox files to be able to build code that depended on other packages.
 
-Note: I had to adjust code a bit to support the ancient Go implementation... Specifically the tls implementation and cipher suits.
+Note: I had to adjust code a bit to support the ancient Go implementation... Specifically the TLS implementation and cipher suits.
 
 {{% highlight bash %}}
 ```
