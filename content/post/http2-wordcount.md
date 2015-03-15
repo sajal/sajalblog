@@ -23,7 +23,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 document are to be interpreted as described in RFC 2119 [RFC2119].
 ```
 
-I did not include HTTP/1 for this comparison because the spec did not seem to use upper cased keywords.
+I did not include HTTP/1 for this comparison because the spec does not seem to use upper cased keywords.
 
 Quick and dirty python script to do the word counts.
 
