@@ -33,10 +33,10 @@
       {{ if eq .Type "post" }}
       <div>
   Tags: {{ range .Params.tag }} 
-    <a href="tag/{{ . | lower | urlize }}">{{ . }}</a> </li>
+    <a href="/tag/{{ . | lower | urlize }}">{{ . }}</a> </li>
   {{ end }} <br />
   Categories: {{ range .Params.category }} 
-    <a href="category/{{ . | lower | urlize }}">{{ . }}</a> </li>
+    <a href="/category/{{ . | lower | urlize }}">{{ . }}</a> </li>
   {{ end }} <br />
 
 </div>
