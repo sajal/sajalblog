@@ -132,6 +132,8 @@ Include `digdroid.aar` into the project. Instructions from the [docs](https://go
 
 Once thats done, I could access the Go library from anywhere simply by importing `go.digdroid.Digdroid`
 
+Screenshot of steps involved in adding `digdroid.aar` into Android Studio : http://imgur.com/a/dEewm
+
 Example usage of above Go code from Java
 {{% highlight java %}}
 ```
