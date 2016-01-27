@@ -5,7 +5,7 @@ title = "Building binary executables for Android in Go"
 tag = ["android", "go", "golang", "gomobile", "binary"]
 +++
 
-I have a use-case to run an *external* Go binary from within an Android app. By *external* i mean something that was not bundled inside the APK, but rather (in my case) downloaded from the Internet. The reason for not bundling in-APK is that I need to be able to auto-upgrade the binary without upgrading the APK. APK updates either require user-action or play store or root - all three are not possible for my use-case. I spent an entire on the issue(android n00b here), which turned out to be a very simple problem.
+I have a use-case to run an *external* Go binary from within an Android app. By *external* i mean something that was not bundled inside the APK, but rather (in my case) downloaded from the Internet. The reason for not bundling in-APK is that I need to be able to auto-upgrade the binary without upgrading the APK. APK updates either require user-action or play store or root - all three are not possible for my use-case. I spent an entire day on the issue(android n00b here), which turned out to be a very simple <strike>problem</strike> solution.
 
 First thing I tried was building normal `linux/arm` binaries that I use for normal arm devices.
 {{% highlight bash %}}
@@ -32,3 +32,5 @@ It took me a while to figure out the `-ldflags="-extldflags=-pie"` portion, with
 Now need to wait for `android/368` or `android/amd64` support in gomobile so I can play with it in the emulator instead of real device...
 
 PS: I know what I am doing is probably an anti-pattern, but this is not a normal end user app. It would run on devices dedicated to this and I will sign and validate downloads.
+
+PSS: I figured this out by mucking around with gomobile using the `-x` option.
