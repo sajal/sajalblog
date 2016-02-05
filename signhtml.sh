@@ -2,7 +2,7 @@
 
 tmpfile=$(mktemp)
 echo "using $tmpfile for $1"
-echo "-->" > $tmpfile
+echo "https://keybase.io/sajal -->" > $tmpfile
 cat $1 >> $tmpfile
 echo "
 <!--" >> $tmpfile
