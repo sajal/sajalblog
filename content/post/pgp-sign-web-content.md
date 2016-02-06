@@ -5,7 +5,7 @@ title = "Sign web content using PGP"
 tag = ["html", "pgp"]
 +++
 
-A lot of web-content these days passes thru untrusted intermediaries, especially plain text traffic which is often intercepted by ISP proxies for caching (and other purposes ;) ). A compromise at these places [can subject your users to malicious payload](http://www.telecomasia.net/content/true-internets-proxy-compromised), mostly in the form of javascript.
+A lot of web-content these days passes thru untrusted intermediaries, especially plain text traffic which is often [intercepted by ISP proxies](http://www.sajalkayan.com/4-reasons-why-i-love-my-isp.html) for caching (and other purposes ;) ). A compromise at these places [can subject your users to malicious payload](http://www.telecomasia.net/content/true-internets-proxy-compromised), mostly in the form of javascript.
 
 The obvious solution to these issues is to use TLS i.e. `https://` sites, which is more accessible these thanks to [Lets Encrypt](https://letsencrypt.org/). But even this does not give complete end-to-end coverage because many sites use a CDN who might unknowingly or maliciously tamper with the contents. 
 
