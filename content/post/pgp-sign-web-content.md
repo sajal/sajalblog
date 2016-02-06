@@ -155,7 +155,7 @@ alert("all your base is belong to us");
 ```
 {{% /highlight %}}
 
-Here is a complete verification script that includes test for tampering portions not covered by PGP. -- `verifyhtml.sh`. Warning `awk` black magic ahead -- copy/pasted from the interwebs.
+Here is a complete verification script that includes test for tampering portions not covered by PGP. -- `verifyhtml.sh`. Warning `awk` black magic ahead -- copy/pasted snippets from the interwebs.
 
 ```
 #!/bin/sh
@@ -193,9 +193,9 @@ echo "checking signature"
 gpg --verify $tmpfile
 rm $tmpfile #Perhaps keep it for debugging purpose if gpg fails to verify.
 ```
-Usage: `./verifyhtml.sh http://www.sajalkayan.com/` . Warning: I haven't tested this enough.
+Usage: `./verifyhtml.sh http://www.sajalkayan.com/` . 
 
-This is not rock solid, i.e. the interceptor could edit the payload and sign it using another key, which could pass validations...
+*Warning: I haven't tested this enough. This is not rock solid, i.e. the interceptor could edit the payload and sign it using another key, which could pass validations...*
 
 Similar signing techniques could be used easily for `.js` and `.css` files. In my opinion popular third party embedded javascript files should be signed using PGP and users should verify and report if any discrepancy is found.
 
