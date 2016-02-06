@@ -7,7 +7,7 @@ cat $1 >> $tmpfile
 echo "
 <!--" >> $tmpfile
 
-gpg --default-key BF15828F  --clearsign $tmpfile
+gpg --digest-algo SHA256 --default-key BF15828F  --clearsign $tmpfile
 
 echo "<!--" > $1
 

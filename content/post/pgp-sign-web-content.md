@@ -21,7 +21,7 @@ echo "https://keybase.io/sajal -->" > $tmpfile #Optional text in commented area
 cat $1 >> $tmpfile
 echo "
 <!--" >> $tmpfile
-gpg --default-key BF15828F  --clearsign $tmpfile #Because im signing with non-default key
+gpg --digest-algo SHA256 --default-key BF15828F  --clearsign $tmpfile #Because im signing with non-default key
 echo "<!--" > $1
 cat "$tmpfile.asc" >> $1
 echo "-->" >> $1
@@ -70,11 +70,10 @@ Hello World
 {{% /highlight %}}
 
 After signing it becomes :-
-{{% highlight html %}}
 ```
 <!--
 -----BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Hash: SHA256
 
 https://keybase.io/sajal -->
 <html>
@@ -90,35 +89,33 @@ Hello World
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJWtgNUAAoJEDlkkKy/FYKPZpIQAI8QEsLbAMbN7uB/TNpyti0v
-k/aqWKs6nvrVL0fI7nz2O1rUQFB0dYh+9wyrYhCW3BbfYv7tjwTEMwNcZT/VJEYw
-EEqrKenX7S2xCpzBgiMZrMpoM6N+wmpMhi0vVnQpZIQMknhgOMvM1qjKD5gtdfeN
-WjUuBfqFerjt+bFihowlfpX0f1Z70b4jO/2opL2u7YD0zMcIbkcxCTs9kVTl+q+y
-RBnBJcSs10lB6wadKzdr1TKxDhxvTS0YHq5oxFnQhjLZdlQx7AJEGgAp9DTuLb5T
-r5nlFtEGFLlstWyKzfr7gBmrg9fKKz0cpYRpLxCKngpv+pNqHVekO+Kw25hx9R1e
-KnOvplBZNc1GdbKipi7Or1t5/sb3C13hsiDSTwvsnaA7LMhONQKyA9oG7pjabK2u
-8l1ybin9Ni2+PoOfJOLikCGSxqYmqfT4Qjsy3tWQumC7tYZgsBOtig0Izu3JLqBE
-DSMIZdr+hpUg8LD5pQmCLtsL70YTlE+xikH64lKKZfaYn3TwdOTrljXeGfisp4XF
-4LEy1IuGui/vlfJ4Bxfh1iAdyFPzF+L8piJWu2Eme2N5FV+cKDwaPSAkGzLkDkD+
-JpT5mLj6nnFI+haRNpPs0mas+eq0zi1y2gBBt5GUCmtz2FWKVjqHJU/p3rW77Opc
-0UlBBV+vXL1YQjhGiZb9
-=res0
+iQIcBAEBCAAGBQJWtil3AAoJEDlkkKy/FYKPuawQAIAZ72rb/B+W1d1XGkXfxE0m
+eUr3lE39FCLGJbroQyWzJFl3384EpDo9nSToN8y0ln6h1nohgykAma9YFAHMrRb1
+0+f8FvUzAMnyaT1xSVmke6zgA2/X0sPIhMDHTUDCgvSFOtk21RgVySpTJ584013u
+foroZxzloZz6vFAFh/OQhtoyaA8Br3dk0YleO5N/ApPsZZjC9hSiyfHh/kJr+71y
+d6Y+EWyR+XQDpjQtyZtQIu34zJYUCTn+0iWPTLmB3pn1jgWg7dfxqJq5XNHRE2Sj
+79vRQmQhzps3IYaWU+Ogauf59mVcgGV3GytL/xt5o9PsVi6g+Yo4l2xF8oC2EKwM
+JYqdsvWtFAk7guxf8v9kP5aUcuA0TnW/H9VVH6oWqHgQKqWYkOcMMrZDGr3aLRiV
+8mDQPP/iZgTlhI0s5Yrn7jBubHbM19qdqADHp+7Jr72qzQzDa0Qiblk4nGyEiYIg
+xGGbRfHfKThVajhx6y3ggdEP6DTHTcCNLItS7OQY3pocXszCGYd1IuLRPFjKoaGh
+td18ycpL2Dhq/HyOjIDcvyzliyU8YcqHFBQaWIhBw03hNFlgjUOedI/glU9IT6hY
+nPdDtji6rkfL55KbZrCbYQL6Ai4LQxLOJTCrzr8tu8tEfzK1lry9ztDgmn4R9XDv
+pssWJDftlfXtU4ncmdF2
+=MhMl
 -----END PGP SIGNATURE-----
 -->
 ```
-{{% /highlight %}}
 
 Anything injected before the first `<!--` and the last `-->` will not be validated, but that portion easy to visually inspect, or write some code to check if something has been added or not.
 
 Example of malicious stuff included which passes gpg verification.
-{{% highlight html %}}
 ```
 <script>
 alert("all your head is belong to us");
 </script>
 <!--
 -----BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Hash: SHA256
 
 https://keybase.io/sajal -->
 <html>
@@ -134,26 +131,25 @@ Hello World
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJWtgNUAAoJEDlkkKy/FYKPZpIQAI8QEsLbAMbN7uB/TNpyti0v
-k/aqWKs6nvrVL0fI7nz2O1rUQFB0dYh+9wyrYhCW3BbfYv7tjwTEMwNcZT/VJEYw
-EEqrKenX7S2xCpzBgiMZrMpoM6N+wmpMhi0vVnQpZIQMknhgOMvM1qjKD5gtdfeN
-WjUuBfqFerjt+bFihowlfpX0f1Z70b4jO/2opL2u7YD0zMcIbkcxCTs9kVTl+q+y
-RBnBJcSs10lB6wadKzdr1TKxDhxvTS0YHq5oxFnQhjLZdlQx7AJEGgAp9DTuLb5T
-r5nlFtEGFLlstWyKzfr7gBmrg9fKKz0cpYRpLxCKngpv+pNqHVekO+Kw25hx9R1e
-KnOvplBZNc1GdbKipi7Or1t5/sb3C13hsiDSTwvsnaA7LMhONQKyA9oG7pjabK2u
-8l1ybin9Ni2+PoOfJOLikCGSxqYmqfT4Qjsy3tWQumC7tYZgsBOtig0Izu3JLqBE
-DSMIZdr+hpUg8LD5pQmCLtsL70YTlE+xikH64lKKZfaYn3TwdOTrljXeGfisp4XF
-4LEy1IuGui/vlfJ4Bxfh1iAdyFPzF+L8piJWu2Eme2N5FV+cKDwaPSAkGzLkDkD+
-JpT5mLj6nnFI+haRNpPs0mas+eq0zi1y2gBBt5GUCmtz2FWKVjqHJU/p3rW77Opc
-0UlBBV+vXL1YQjhGiZb9
-=res0
+iQIcBAEBCAAGBQJWtil3AAoJEDlkkKy/FYKPuawQAIAZ72rb/B+W1d1XGkXfxE0m
+eUr3lE39FCLGJbroQyWzJFl3384EpDo9nSToN8y0ln6h1nohgykAma9YFAHMrRb1
+0+f8FvUzAMnyaT1xSVmke6zgA2/X0sPIhMDHTUDCgvSFOtk21RgVySpTJ584013u
+foroZxzloZz6vFAFh/OQhtoyaA8Br3dk0YleO5N/ApPsZZjC9hSiyfHh/kJr+71y
+d6Y+EWyR+XQDpjQtyZtQIu34zJYUCTn+0iWPTLmB3pn1jgWg7dfxqJq5XNHRE2Sj
+79vRQmQhzps3IYaWU+Ogauf59mVcgGV3GytL/xt5o9PsVi6g+Yo4l2xF8oC2EKwM
+JYqdsvWtFAk7guxf8v9kP5aUcuA0TnW/H9VVH6oWqHgQKqWYkOcMMrZDGr3aLRiV
+8mDQPP/iZgTlhI0s5Yrn7jBubHbM19qdqADHp+7Jr72qzQzDa0Qiblk4nGyEiYIg
+xGGbRfHfKThVajhx6y3ggdEP6DTHTcCNLItS7OQY3pocXszCGYd1IuLRPFjKoaGh
+td18ycpL2Dhq/HyOjIDcvyzliyU8YcqHFBQaWIhBw03hNFlgjUOedI/glU9IT6hY
+nPdDtji6rkfL55KbZrCbYQL6Ai4LQxLOJTCrzr8tu8tEfzK1lry9ztDgmn4R9XDv
+pssWJDftlfXtU4ncmdF2
+=MhMl
 -----END PGP SIGNATURE-----
 -->
 <script>
 alert("all your base is belong to us");
 </script>
 ```
-{{% /highlight %}}
 
 Here is a complete verification script that includes test for tampering portions not covered by PGP. -- `verifyhtml.sh`. Warning `awk` black magic ahead -- copy/pasted snippets from the interwebs.
 
