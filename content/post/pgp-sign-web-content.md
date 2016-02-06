@@ -1,6 +1,6 @@
 +++
-date = "2016-02-06T13:00:00+00:00"
-draft = true
+date = "2016-02-06T18:18:00+00:00"
+draft = false
 title = "Sign web content using PGP"
 tag = ["html", "pgp"]
 +++
