@@ -7,7 +7,7 @@ tag = ["html", "pgp"]
 
 A lot of web-content these days passes thru untrusted intermediaries, especially plain text traffic which is often [intercepted by ISP proxies](http://www.sajalkayan.com/4-reasons-why-i-love-my-isp.html) for caching (and other purposes ;) ). A compromise at these places [can subject your users to malicious payload](http://www.telecomasia.net/content/true-internets-proxy-compromised), mostly in the form of javascript.
 
-The obvious solution to these issues is to use TLS i.e. `https://` sites, which is more accessible these thanks to [Lets Encrypt](https://letsencrypt.org/). But even this does not give complete end-to-end coverage because many sites use a CDN who might unknowingly or maliciously tamper with the contents. 
+The obvious solution to these issues is to use TLS i.e. `https://` sites, which is more accessible these days thanks to [Lets Encrypt](https://letsencrypt.org/). But even this does not give complete end-to-end coverage because many sites use a CDN who might unknowingly or maliciously tamper with the contents. 
 
 One way to make such tampering detectable is to sign textual web-content using PGP. As a PoC, I have signed all html pages of this blog with a pgp signature. Go ahead, view source of this page, I'll wait...
 
