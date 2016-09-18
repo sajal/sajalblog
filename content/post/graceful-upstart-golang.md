@@ -70,3 +70,20 @@ Apr  2 21:22:15 sajal-lappy graceful: 2016/04/02 21:22:15 Starting...
 Apr  2 21:22:19 sajal-lappy kernel: [4134089.549794] init: graceful main process (950223) killed by TERM signal
 ```
 The process got killed, not interrupted... Note PID 950223 belonged to the exec process and not our binary. This will be relevant below.
+
+Fortunately for us, Upstart allows us to [specify the kill signal](http://upstart.ubuntu.com/cookbook/#kill-signal) being used... Lets update /etc/init/graceful.conf
+```
+description "graceful example"
+author "Me <me@example.com>"
+
+start on runlevel [2345]
+stop on runlevel [016]
+respawn
+console log
+limit nofile 100000 100000
+setuid nobody
+setgid nogroup
+kill signal INT
+exec /usr/local/bin/graceful 2>&1 | logger -t graceful
+```
+
