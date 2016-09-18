@@ -54,7 +54,7 @@ Currently I have a Raspberry Pi pinging my phone over Bluetooth to detect presen
 
 I was originally skeptical about using Bluetooth. I did not expect the signal to cover my entire (1-bedroom) apartment, but turns out it works very well. Now my lights turn on even before I am done opening my door.
 
-I have the following Go code running on a Raspberry Pi 3 (which has Bluetooth builtin).
+I have the following Go code running on a Raspberry Pi 3 (which has Bluetooth builtin). 
 
 {{% highlight go %}}
 ````
@@ -108,7 +108,7 @@ func main() {
 ````
 {{% /highlight %}}
 
-And my bash script evolved to call the Go code using curl.
+I need to use this http API because the bash script runs on a device without Bluetooth support. My bash script evolved to call the Go code using curl.
 
 {{% highlight bash %}}
 ````
