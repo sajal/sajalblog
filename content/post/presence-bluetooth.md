@@ -167,7 +167,7 @@ In order to make the presence detection more robust, I am considering the follow
 
 #### UPDATE
 
-I investigated more about the possibility of using my Fitbit Charge HR for presence. It is not a practical option. The pi can detect it, but if I open the Fitbit app on my phone, the Fitbit [will stop advertisingg](https://community.fitbit.com/t5/Web-API/Charge-HR-and-Bit-Finder-Geo-app/m-p/1106648#M4177) until I either force close the Fitbit app, or turn off (and on) the Bluetooth functionality on the phone.
+I investigated more about the possibility of using my Fitbit Charge HR for presence. It is not a practical option. The pi can detect it, but if I open the Fitbit app on my phone, the Fitbit [will stop advertising](https://community.fitbit.com/t5/Web-API/Charge-HR-and-Bit-Finder-Geo-app/m-p/1106648#M4177) until I either force close the Fitbit app, or turn off (and on) the Bluetooth functionality on the phone.
 
 {{% highlight bash %}}
 ````
