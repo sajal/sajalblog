@@ -154,7 +154,7 @@ This method has been in production for the last week, and only once did it give 
 
 In order to make the presence detection more robust, I am considering the following **in addition** to the above...
 
-1. Somehow detect the presence of my [Fitbit charge HR tracker](https://www.fitbit.com/chargehr). I can't seem to figure out the MAC address of the tracker. If someone knows of a way let me know. Someone else [blogged about](http://dotnet.work/2016/02/tracking-fitbit-presence-under-linux-raspberry-pi-2/) using the bundled dongle for this, but it is very unreliable method. If the Fitbit is connected with the phone, [galileo](https://bitbucket.org/benallard/galileo/) will not be able to detect it.
+1. Somehow detect the presence of my [Fitbit Charge HR tracker](https://www.fitbit.com/chargehr). I can't seem to figure out the MAC address of the tracker. If someone knows of a way let me know. Someone else [blogged about](http://dotnet.work/2016/02/tracking-fitbit-presence-under-linux-raspberry-pi-2/) using the bundled dongle for this, but it is very unreliable method. If the Fitbit is connected with the phone, [galileo](https://bitbucket.org/benallard/galileo/) will not be able to detect it.
 2. Get a Bluetooth tag and attach to keychain. I see some commercially available tags (example [Tile](https://www.thetileapp.com/)), but these tags are meant to work with apps on phones. I don't know if works on regular computers with Bluetooth dongles (Raspberry Pi).
 3. Motion sensors. These would obviously not work when I am asleep or still... But it's something to look into, especially since I plan to use it for bathroom lights. Motion sensors might give me some sense of which room I am in, should I need that information for future projects.
 4. Keycard holders. The type they use in hotels as a master switch for the room. The difference is in my case I would only use it as a signal for presence and not hardwire my mains thru it. Could be a simple mechanical switch wired to GPIO pins of a pi.
@@ -164,3 +164,24 @@ In order to make the presence detection more robust, I am considering the follow
 
 1. Timer based presence. Assume me to be present from some specified time to another specified time.
 2. GPS+phone based presence solution. At home the GPS is very inaccurate. I would need to add a huge error margin(few hundred meters - or higher if its rain-ey), effectively my system would think I am at home even if I am only in the general vicinity.
+
+#### UPDATE
+
+I investigated more about the possibility of using my Fitbit Charge HR for presence. It is not a practical option. The pi can detect it, but if I open the Fitbit app on my phone, the Fitbit [will stop advertisingg](https://community.fitbit.com/t5/Web-API/Charge-HR-and-Bit-Finder-Geo-app/m-p/1106648#M4177) until I either force close the Fitbit app, or turn off (and on) the Bluetooth functionality on the phone.
+
+{{% highlight bash %}}
+````
+pi@raspberrypi:~$ sudo timeout --signal SIGINT 5 hcitool lescan
+LE Scan ...
+xx:xx:xx:xx:xx:xx (unknown)
+xx:xx:xx:xx:xx:xx Charge HR
+yy:yy:yy:yy:yy:yy (unknown)
+zz:zz:zz:zz:zz:zz (unknown)
+pi@raspberrypi:~$ #Now open app on phone and sync
+pi@raspberrypi:~$ sudo timeout --signal SIGINT 5 hcitool lescan
+LE Scan ...
+zz:zz:zz:zz:zz:zz (unknown)
+yy:yy:yy:yy:yy:yy (unknown)
+pi@raspberrypi:~$ 
+````
+{{% /highlight %}}
