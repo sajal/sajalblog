@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)http://127.0.0.1:3999/pulse.slide#8 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>TurboBytes Pulse</title>
+    
+    <script src="./pulse-barcampbkk-2016_files/slides.js"></script>
+    <script>
+      
+      if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
+        var _gaq = _gaq || [];
+        _gaq.push(["_setAccount", "UA-11222381-6"]);
+        _gaq.push(["b._setAccount", "UA-49880327-6"]);
+        window.trackPageview = function() {
+          _gaq.push(["_trackPageview", location.pathname+location.hash]);
+          _gaq.push(["b._trackPageview", location.pathname+location.hash]);
+        };
+        window.trackPageview();
+        window.trackEvent = function(category, action, opt_label, opt_value, opt_noninteraction) {
+          _gaq.push(["_trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
+          _gaq.push(["b._trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
+        };
+      }
+    </script>
+  <meta name="viewport" content="width=1100,height=750"><meta name="apple-mobile-web-app-capable" content="yes"></head>
+
+  <body style="display: none" class="loaded">
+
+    <section class="slides layout-widescreen">
+      
+      <article class="">
+        <h1>TurboBytes Pulse</h1>
+        <h3>Debugging the interwebs... TurboBytes style</h3>
+        <h3>15 October 2016</h3>
+        
+          <div class="presenter">
+            
+  
+  <p>
+    Sajal Kayan
+  </p>
+  
+
+  
+  <p>
+    CTO, TurboBytes BV
+  </p>
+  
+
+          </div>
+        
+      </article>
+      
+  
+  
+      <article class="">
+      
+        <h3>What?</h3>
+        <style>
+html {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+</style>
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+  
+  <p>
+    Run test from several end-user networks.
+  </p>
+  
+<p class="link"><a href="https://pulse.turbobytes.com/" target="_blank">pulse.turbobytes.com</a></p><p class="link"><a href="https://github.com/turbobytes/pulse" target="_blank">github.com/turbobytes/pulse</a></p>
+  <ul>
+  
+    <li>DNS</li>
+  
+    <li>HTTP</li>
+  
+    <li>MTR - a.k.a. fancy-pants traceroute</li>
+  
+  </ul>
+
+  
+  <p>
+    Started as a project for internal use, prettified exposed to the world.
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>Why?</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+  
+  <p>
+    Tired of badgering team members (and friends).
+  </p>
+  
+
+  
+  <div class="code"><pre>Sajal&gt; Hey what output do you get when you run curl -vvo /dev/null http://....
+Person&gt; FUUUU!!! This is getting annoying...</pre></div>
+  
+
+  
+  <p>
+    Sometimes spamming chatrooms.
+  </p>
+  
+
+  
+  <div class="code"><pre>Sajal&gt; Hey anyone know anyone in China who runs Linux and can run some commands for me?
+/kick Sajal Spammer</pre></div>
+  
+
+  
+  <p>
+    Customers giving incomplete information.
+  </p>
+  
+
+  
+  <div class="code"><pre>Customer&gt; Our customers customers user can't load the site.
+Sajal&gt; What error do they see?
+Customer&gt; Dunno... fix asap.</pre></div>
+  
+
+  
+  <p>
+    Evidence against service provider
+  </p>
+  
+
+  
+  <div class="code"><pre>Sajal&gt; Hey Mr. CDN, your service is inaccessible for users in &lt;some remote country&gt;. 
+CDN&gt; Traceroute or GTFO.
+Sajal&gt; https://pulse.turbobytes.com/results/..../</pre></div>
+  
+
+      
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>Why Go?</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+  
+  <p>
+    Why not...
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>DNS</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+<div class="image">
+  <img src="./pulse-barcampbkk-2016_files/dns.png">
+</div>
+
+      
+      </article>
+  
+  
+  
+      <article class="far-past">
+      
+        <h3>HTTP</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+<div class="image">
+  <img src="./pulse-barcampbkk-2016_files/http.png">
+</div>
+
+      
+      </article>
+  
+  
+  
+      <article class="past">
+      
+        <h3>MTR</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+<div class="image">
+  <img src="./pulse-barcampbkk-2016_files/mtr.png">
+</div>
+
+      
+      </article>
+  
+  
+  
+      <article class="current">
+      
+        <h3>Components</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+  <ul>
+  
+    <li>CNC: Command and Control server</li>
+  
+    <li>Minion: A test agent anywhere in the world</li>
+  
+    <li>pulsefrontend: Go webapp (not open-source) and webapp (angularjs)</li>
+  
+    <li>User: You... maybe...</li>
+  
+  </ul>
+
+      
+      </article>
+  
+  
+  
+      <article class="next">
+      
+        <h3>Agent - a.k.a. minion</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+<div class="image">
+  <img src="./pulse-barcampbkk-2016_files/pulse-agent-pic-w480.jpg">
+</div>
+
+  <ul>
+  
+    <li>PAD: Pulse Agent Device</li>
+  
+    <li>VPS: a.k.a. "Cloud"</li>
+  
+    <li>Other Home/Office gear</li>
+  
+  </ul>
+
+      
+      </article>
+  
+  
+  
+      <article class="far-next">
+      
+        <h3>Binaries</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+  <ul>
+  
+    <li>linux/386, linux/amd64, linux/arm, windows/amd64, freebsd/386, freebsd/amd64, freebsd/arm, <b>android/arm</b>, darwin/386, darwin/amd64, darwin/arm</li>
+  
+    <li>Download: https://tb-minion.turbobytes.net/minion.$OS.$ARCH.tar.gz</li>
+  
+    <li>Checksum: https://tb-minion.turbobytes.net/minion.$OS.$ARCH.tar.gz.sha256sum</li>
+  
+    <li>GPG sig: https://tb-minion.turbobytes.net/minion.$OS.$ARCH.tar.gz.sig</li>
+  
+  </ul>
+
+  
+  <p>
+    Actual deployment consists of a bash script which downloads and runs latest version of minion (after validating signature with hardcoded GPG key - <a href="http://pgp.mit.edu/pks/lookup?op=vindex&amp;search=0xB7A3CD1E24F6D50F" target="_blank">0x24F6D50F</a>)
+  </p>
+  
+
+      
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>Comms</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+  <ul>
+  
+    <li>Most minions run in NAT'd networks.</li>
+  
+    <li>(Long-)Polling is sooo 2005.</li>
+  
+    <li>Minion creates TCP/TLS connection to CNC and creates a RPC server on that connection. CNC can now issue RPC calls to minion on demand...</li>
+  
+    <li>Self-signed client cert using pinned CA</li>
+  
+  </ul>
+
+  
+  <div class="code"><pre>[minion] ---------TCP--------&gt; [CNC]
+ [minion] --------TLS-------&gt; [CNC]
+  [minion] &lt;----RPC REQ----- [CNC]
+  [minion] ----RPC RESP----&gt; [CNC]</pre></div>
+  
+
+      
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>Comms</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+  
+  <p>
+    Minion - Potentially NAT'd
+  </p>
+  
+
+  
+  <div class="code"><pre>//Dial TLS to CNC
+conn, err := tls.DialWithDialer(dialer, "tcp", cnc, cfg)
+if err != nil {
+    //Handle...
+}
+//Create a server that serves this connection
+rpc.ServeConn(conn)</pre></div>
+  
+
+  
+  <p>
+    CNC - Publicly accessible server
+  </p>
+  
+
+  
+  <div class="code"><pre>listener, err := tls.Listen("tcp", addr, cfg)
+if err != nil {
+    //Handle...
+}
+conn, err := listener.Accept()
+if err != nil {
+    //Handle...
+}
+//Create rpc.Client for each successful incoming connection
+client = rpc.NewClient(conn)</pre></div>
+  
+
+      
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>Mobile</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+<div class="image">
+  <img src="./pulse-barcampbkk-2016_files/mobile.png">
+</div>
+
+  <ul>
+  
+    <li>Started experimenting with mobile agents in 2015. </li>
+  
+  </ul>
+
+      
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>Mobile</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+  <ul>
+  
+    <li>Android-only. iOS too expensive, no experience.</li>
+  
+    <li>Ugly Java wrapper which downloads and runs latest version of minion executable binary.</li>
+  
+    <li>minion code exactly the same as other platforms.</li>
+  
+    <li>Compiling took a bit of figuring out <a href="http://www.sajalkayan.com/post/go-android-binary.html" target="_blank">www.sajalkayan.com/post/go-android-binary.html</a></li>
+  
+    <li>Rough prototype</li>
+  
+    <li>Android does not include mtr. needs root. Experimental no-root hack <a href="https://github.com/sajal/ping2mtr" target="_blank">github.com/sajal/ping2mtr</a></li>
+  
+    <li>Plan to remotely refill prepaid cards, and apply data packages using USSN/SMS remotely via Java-side code.</li>
+  
+  </ul>
+
+      
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>Challenges</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+  <ul>
+  
+    <li>Agent hosts are Friends, Family and enthusiastic users. Only hosts get API access.</li>
+  
+    <li>Agent sometimes dies, and host is not responsive, or technically incapable of fixing issues - Usually SD card issues.</li>
+  
+    <li>Monetization - Pulse costs money for hardware, servers, manpower.</li>
+  
+    <li>Mobile Agents - How to cover key markets where we are not physically present?</li>
+  
+    <li>Speaking of which... We are <b>hiring</b>.</li>
+  
+  </ul>
+
+      
+      </article>
+  
+  
+  
+      <article class="">
+      
+        <h3>TODO</h3>
+        
+<div class="background">
+  <img src="./pulse-barcampbkk-2016_files/background.png">
+</div>
+
+  <ul>
+  
+    <li>Code cleanup</li>
+  
+    <li>Unit tests</li>
+  
+    <li>Bug fixes</li>
+  
+    <li>Security audit</li>
+  
+    <li>Feature enhancements</li>
+  
+    <li>Hire dev to fix above.</li>
+  
+  </ul>
+
+      
+      </article>
+  
+  
+
+      <article class="">
+        <h3>Thank you</h3>
+        
+          <div class="presenter">
+            
+  
+  <p>
+    Sajal Kayan
+  </p>
+  
+
+  
+  <p>
+    CTO, TurboBytes BV
+  </p>
+  
+<p class="link"><a href="mailto:sajal@turbobytes.com" target="_blank">sajal@turbobytes.com</a></p><p class="link"><a href="https://pulse.turbobytes.com/" target="_blank">https://pulse.turbobytes.com/</a></p><p class="link"><a href="http://www.turbobytes.com/" target="_blank">http://www.turbobytes.com/</a></p><p class="link"><a href="http://www.sajalkayan.com/" target="_blank">http://www.sajalkayan.com/</a></p><p class="link"><a href="http://twitter.com/sajal" target="_blank">@sajal</a></p>
+          </div>
+        
+      </article>
+
+    <div class="slide-area" id="prev-slide-area"></div><div class="slide-area" id="next-slide-area"></div></section>
+
+    <div id="help" style="display: none;">
+      Use the left and right arrow keys or click the left and right
+      edges of the page to navigate between slides.<br>
+      (Press 'H' or navigate to hide this message.)
+    </div>
+
+    
+    <script src="./pulse-barcampbkk-2016_files/play.js"></script>
+    
+
+    <script>
+      (function() {
+        
+        if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
+          var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = true;
+          ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
+          var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);
+        }
+      })();
+    </script>
+  
+
+<link rel="stylesheet" type="text/css" href="./pulse-barcampbkk-2016_files/css"><link rel="stylesheet" type="text/css" href="./pulse-barcampbkk-2016_files/styles.css"></body></html>
