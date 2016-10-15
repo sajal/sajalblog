@@ -1,0 +1,176 @@
+TurboBytes Pulse
+Debugging the interwebs... TurboBytes style
+15 Oct 2016
+Tags: http, dns, mtr, eyeball
+
+Sajal Kayan
+CTO, TurboBytes BV
+sajal@turbobytes.com
+https://pulse.turbobytes.com/
+http://www.turbobytes.com/
+http://www.sajalkayan.com/
+@sajal
+* What?
+#Remove before upload to web
+#.html gray.html
+.background background.png
+
+Run test from several end-user networks.
+
+.link https://pulse.turbobytes.com
+.link https://github.com/turbobytes/pulse
+
+- DNS
+- HTTP
+- MTR - a.k.a. fancy-pants traceroute
+
+Started as a project for internal use, prettified exposed to the world.
+
+* Why?
+.background background.png
+
+Tired of badgering team members (and friends).
+
+	Sajal> Hey what output do you get when you run curl -vvo /dev/null http://....
+	Person> FUUUU!!! This is getting annoying...
+
+Sometimes spamming chatrooms.
+
+	Sajal> Hey anyone know anyone in China who runs Linux and can run some commands for me?
+	/kick Sajal Spammer
+
+Customers giving incomplete information.
+
+	Customer> Our customers customers user can't load the site.
+	Sajal> What error do they see?
+	Customer> Dunno... fix asap.
+
+Evidence against service provider
+
+	Sajal> Hey Mr. CDN, your service is inaccessible for users in <some remote country>. 
+	CDN> Traceroute or GTFO.
+	Sajal> https://pulse.turbobytes.com/results/..../
+
+* Why Go?
+.background background.png
+
+Why not...
+
+* DNS
+.background background.png
+
+.image dns.png
+
+* HTTP
+.background background.png
+
+.image http.png
+
+* MTR
+.background background.png
+
+.image mtr.png
+
+* Components
+.background background.png
+
+- CNC: Command and Control server
+- Minion: A test agent anywhere in the world
+- pulsefrontend: Go webapp (not open-source) and webapp (AngularJS)
+- User: You... maybe...
+
+* Agent - a.k.a. minion
+.background background.png
+
+.image pulse-agent-pic-w480.jpg
+
+- PAD: Pulse Agent Device
+- VPS: a.k.a. "Cloud"
+- Other Home/Office gear
+
+* Binaries
+.background background.png
+
+- linux/386, linux/amd64, linux/arm, windows/amd64, freebsd/386, freebsd/amd64, freebsd/arm, *android/arm*, darwin/386, darwin/amd64, darwin/arm
+- Download: https://tb-minion.turbobytes.net/minion.$OS.$ARCH.tar.gz
+- Checksum: https://tb-minion.turbobytes.net/minion.$OS.$ARCH.tar.gz.sha256sum
+- GPG sig: https://tb-minion.turbobytes.net/minion.$OS.$ARCH.tar.gz.sig
+
+Actual deployment consists of a bash script which downloads and runs latest version of minion (after validating signature with hardcoded GPG key - [[http://pgp.mit.edu/pks/lookup?op=vindex&search=0xB7A3CD1E24F6D50F][0x24F6D50F]])
+
+* Comms
+.background background.png
+
+- Most minions run in NAT'd networks.
+- (Long-)Polling is sooo 2005.
+- Minion creates TCP/TLS connection to CNC and creates a RPC server on that connection. CNC can now issue RPC calls to minion on demand...
+- Self-signed client cert using pinned CA
+
+	[minion] ---------TCP--------> [CNC]
+	 [minion] --------TLS-------> [CNC]
+	  [minion] <----RPC REQ----- [CNC]
+	  [minion] ----RPC RESP----> [CNC]
+
+
+* Comms
+.background background.png
+
+Minion - Potentially NAT'd
+
+	//Dial TLS to CNC
+	conn, err := tls.DialWithDialer(dialer, "tcp", cnc, cfg)
+	if err != nil {
+		//Handle...
+	}
+	//Create a server that serves this connection
+	rpc.ServeConn(conn)
+
+CNC - Publicly accessible server
+
+	listener, err := tls.Listen("tcp", addr, cfg)
+	if err != nil {
+		//Handle...
+	}
+	conn, err := listener.Accept()
+	if err != nil {
+		//Handle...
+	}
+	//Create rpc.Client for each successful incoming connection
+	client = rpc.NewClient(conn)
+
+
+
+* Mobile
+.background background.png
+.image mobile.png
+- Started experimenting with mobile agents in 2015. 
+
+* Mobile
+.background background.png
+
+- Android-only. iOS too expensive, no experience.
+- Ugly Java wrapper which downloads and runs latest version of minion executable binary.
+- minion code exactly the same as other platforms.
+- Compiling took a bit of figuring out [[http://www.sajalkayan.com/post/go-android-binary.html]]
+- Rough prototype
+- Android does not include mtr. needs root. Experimental no-root hack [[https://github.com/sajal/ping2mtr]]
+- Plan to remotely refill prepaid cards, and apply data packages using USSN/SMS remotely via Java-side code.
+
+* Challenges
+.background background.png
+
+- Agent hosts are Friends, Family and enthusiastic users. Only hosts get API access.
+- Agent sometimes dies, and host is not responsive, or technically incapable of fixing issues - Usually SD card issues.
+- Monetization - Pulse costs money for hardware, servers, manpower.
+- Mobile Agents - How to cover key markets where we are not physically present?
+- Speaking of which... We are *hiring*.
+
+* TODO
+.background background.png
+
+- Code cleanup
+- Unit tests
+- Bug fixes
+- Security audit
+- Feature enhancements
+- Hire dev to fix above.
