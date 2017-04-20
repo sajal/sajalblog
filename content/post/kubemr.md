@@ -23,6 +23,21 @@ kubemr is a MapReduce system that runs within a Kubernetes cluster. Apart from i
 
 https://github.com/turbobytes/kubemr/blob/master/README.md
 
+#### JSON Patch
+
+Originally I planned to use etcd for state, but instead, I decided to use [JSON patch](http://jsonpatch.com/) functionality [provided by kubernetes](https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#patch-operations) to make changes to this state. The `test` operation allows the patch to fail if some condition is not met.
+
+Example lock using JSON patch :-
+
+```
+[
+  { "op": "test", "path": "/lockholder", "value": None },
+  { "op": "add", "path": "/lockholder", "value": "me" },
+]
+```
+
+Above operation would fail if the `lockholder` already has a value. So multiple users might try to acquire the lock at the same time but only 1 would succeed.
+
 #### Job state
 
 All state information about a MapReduce task is stored in a kubernetes ThirdPartyResource.
@@ -103,9 +118,12 @@ Will probably have some way to stream results, and some way to retry failed jobs
 1. This is pre-pre-pre-alpha. Use at your own risk. There may be backwards-incompatible changes.
 2. I am not cleaning up after myself properly. If playing with it in a production cluster, do everything in a new namespace and simply delete the namespace once done.
 3. I have not retrying any failed tasks. Probably not fine to put a 10GB job only to find out some intermittent DNS timeout broke the job.
+4. I don't know what guarantees the kube-apiserver provides about the JSON Patch. Especially in multi-master environments.
 
 ### Conclusion
 
 I had fun building this. Hope you have fun playing with it too.
+
+Looking forward to using this at [work](http://www.turbobytes.com/) in the near future.
 
 Special thanks to [Aaron Schlesinger](http://arschles.com/). His [talk](https://www.youtube.com/watch?v=qiB4RxCDC8o) and the corresponding [example code](https://github.com/arschles/2017-KubeCon-EU) helped a lot.
