@@ -1,7 +1,7 @@
 +++
-date = "2017-04-20T12:46:11+00:00"
-draft = true
-title = "kubemr: Kubernetes native distributed MapReduce"
+date = "2017-04-20T20:00:00+00:00"
+draft = false
+title = "kubemr: Kubernetes native distributed MapReduce framework"
 tag = ["kubernetes", "mapreduce", "go", "golang"]
 +++
 
@@ -9,7 +9,7 @@ tl;dr version [https://github.com/turbobytes/kubemr](https://github.com/turbobyt
 
 ### Background
 
-Few years ago I wrote a MapReduce tool in Go called [gomr](https://github.com/turbobytes/gomr). I never used it for anything, just wrote it as an experiment to see if I could run MapReduce jobs without requiring a master, and it worked. The distributed consensus is provided by etcd which is typically deployed as a cluster. I am not fond of master/slave or primary/secondary systems. I like it when individual units are responsible and co-ordinate with each other and do their fair share of work.
+Few years ago I wrote a [MapReduce](https://en.wikipedia.org/wiki/MapReduce) tool in Go called [gomr](https://github.com/turbobytes/gomr). I never used it for anything, just wrote it as an experiment to see if I could run MapReduce jobs without requiring a master, and it worked. The distributed consensus is provided by etcd which is typically deployed as a cluster. I am not fond of master/slave or primary/secondary systems. I like it when individual units are responsible and co-ordinate with each other and do their fair share of work.
 
 gomr used S3 to upload user binaries and store map/reduce outputs and results. A running worker would query etcd for pending jobs, fetch binary from S3 and then `Exec()` it.
 
@@ -100,6 +100,8 @@ The operator watches for `MapReduceJob`s and creates Kubernetes resources for it
 Example: https://github.com/turbobytes/kubemr/tree/master/cmd/wordcount
 
 This is user supplied docker image. It must have `CMD` or `ENTRYPOINT` defined. The actual code needs to basically satisfy [JobWorker interface](https://godoc.org/github.com/turbobytes/kubemr/pkg/worker#JobWorker).
+
+The user could actually write the worker in any language, as long as they implement everything that the Go library does. Perhaps in future I could provide wrappers to allow workers to be written as shell commands.
 
 ##### API server
 

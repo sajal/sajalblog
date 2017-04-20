@@ -2,10 +2,10 @@
 date = "2015-03-15T20:43:00+00:00"
 draft = false
 title = "http/2 is stricter than http/1.1"
-tag = ["http/1.1", "http/2"]
+tag = []
 +++
 
-I am starting to read the [draft http/2 spec](https://tools.ietf.org/html/draft-ietf-httpbis-http2-17) and realized its quite strict and leaves little to interpreter's imagination. 
+I am starting to read the [draft http/2 spec](https://tools.ietf.org/html/draft-ietf-httpbis-http2-17) and realized its quite strict and leaves little to interpreter's imagination.
 
 Here are the wordcounts for various specs for following words : *MUST*, *REQUIRED*, *SHALL*, *SHOULD*, *RECOMMENDED*, *MAY*, *OPTIONAL*
 
@@ -60,7 +60,7 @@ def summarize(counts):
     counts["mustpct"] = counts["MUST"] * 100.0 / total
     counts["shouldpct"] = counts["SHOULD"] * 100.0 / total
     counts["maypct"] = counts["MAY"] * 100.0 / total
-    return counts 
+    return counts
 
 
 if __name__ == "__main__":
