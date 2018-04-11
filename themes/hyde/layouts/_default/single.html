@@ -9,16 +9,16 @@
   <span class="post-date">
     {{ .Date.Format "Mon, Jan 2, 2006" }}
     {{ if eq .Type "post" }}
-    <a 
-      class="twitter-share-button" 
+    <a
+      class="twitter-share-button"
       href="https://twitter.com/share"
       data-via="sajal"
-      data-text="{{ .Title }}" 
+      data-text="{{ .Title }}"
       data-url="http://www.sajalkayan.com{{ .RelPermalink }}"
       >
       Tweet
     </a>
-    <a 
+    <a
       href="http://news.ycombinator.com/submit"
       class="hn-share-button"
       data-title="{{ .Title }}"
@@ -29,13 +29,16 @@
     <!-- <span id="redditbutton"></span> -->
     {{ end }}
   </span>
+      {{ if .Params.toc }}
+      {{ .TableOfContents }}
+      {{ end }}
       {{ .Content }}
       {{ if eq .Type "post" }}
       <div>
-  Tags: {{ range .Params.tag }} 
+  Tags: {{ range .Params.tag }}
     <a href="/tag/{{ . | lower | urlize }}">{{ . }}</a> </li>
   {{ end }} <br />
-  Categories: {{ range .Params.category }} 
+  Categories: {{ range .Params.category }}
     <a href="/category/{{ . | lower | urlize }}">{{ . }}</a> </li>
   {{ end }} <br />
 
@@ -50,7 +53,7 @@
 		/* * * DON'T EDIT BELOW THIS LINE * * */
 		(function(w, d, s) {
 			function go(){
-				var dsq = d.createElement(s); 
+				var dsq = d.createElement(s);
 				dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
 				(d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild(dsq);
 			}
