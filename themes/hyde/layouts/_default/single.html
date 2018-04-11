@@ -14,15 +14,15 @@
       href="https://twitter.com/share"
       data-via="sajal"
       data-text="{{ .Title }}"
-      data-url="http://www.sajalkayan.com{{ .RelPermalink }}"
+      data-url="https://www.sajalkayan.com{{ .RelPermalink }}"
       >
       Tweet
     </a>
     <a
-      href="http://news.ycombinator.com/submit"
+      href="https://news.ycombinator.com/submit"
       class="hn-share-button"
       data-title="{{ .Title }}"
-      data-url="http://www.sajalkayan.com{{ .RelPermalink }}"
+      data-url="https://www.sajalkayan.com{{ .RelPermalink }}"
       >
       Vote on HN
     </a>
@@ -48,13 +48,13 @@
 		/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
 		var disqus_shortname = 'sajal';
 		var disqus_title = '{{ .Title }}';
-		var disqus_url = 'http://www.sajalkayan.com{{ .RelPermalink }}';
+		var disqus_url = 'https://www.sajalkayan.com{{ .RelPermalink }}';
 
 		/* * * DON'T EDIT BELOW THIS LINE * * */
 		(function(w, d, s) {
 			function go(){
 				var dsq = d.createElement(s);
-				dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+				dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
 				(d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild(dsq);
 			}
 		if (w.addEventListener) { w.addEventListener("load", go, false); }
