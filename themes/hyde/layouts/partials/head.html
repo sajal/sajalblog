@@ -28,7 +28,7 @@
   if ((host == window.location.host) && (window.location.protocol != "https:"))
       window.location.protocol = "https";
 
-  !function(a,b,c){function d(){if(!a.TURBOBYTESstarted){a.TURBOBYTESstarted=!0;var d=b.createElement(c),e=b.getElementsByTagName(c)[0];d.async=d.src="https://rum.turbobytes.com/static/rum/rum.js",e.parentNode.insertBefore(d,e)}}function e(){setTimeout(d,2e3)}a.addEventListener&&a.chrome&&(b.readyState&&"complete"!==b.readyState?(a.addEventListener("load",e,!1),setTimeout(d,15e3)):e())}(window,document,"script");
+  (function(b,c){b.Promise&&(new b.Promise(function(a,d){"complete"===c.readyState&&a();b.addEventListener("load",a);b.setTimeout(a,15E3)})).then(function(){const a=c.createElement("iframe");a.referrerPolicy="no-referrer";a.width=0;a.height=0;a.style="display:none";a.src="https://rum.turbobytes.com/static/rum/rum.html?id=1";c.body.appendChild(a)}).catch(function(){})})(window,document);
   </script>
 
 <script>
