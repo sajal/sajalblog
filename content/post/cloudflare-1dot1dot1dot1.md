@@ -2,7 +2,7 @@
 date = "2018-04-21T17:46:45+00:00"
 draft = false
 title = "Using Cloudflare's 1.1.1.1 might lead to slower CDN performance"
-tag = ["cloudflare", "1dot1dot1dot1", "dns", "cdn"]
+tag = ["cloudflare", "1dot1dot1dot1", "dns", "cdn", "site performance"]
 +++
 
 **Disclaimer: All views expressed here are personal**

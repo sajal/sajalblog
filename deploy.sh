@@ -9,3 +9,14 @@ cp ../sajal.github.io/post.xml ../sajal.github.io/feed.xml
 echo "Signing"
 find ../sajal.github.io/ | grep '\.html' | xargs -n1 -iX  ./signhtml.sh 'X'
 echo "Update done"
+#Match ancient feed urls from wordpress days
+for f in $(find ../sajal.github.io/tag/ -name index.xml)
+do
+  #echo $f
+  BASEDIR=$(echo $f | sed "s/index\.xml//g")
+  #echo $BASEDIR
+  TARGETDIR="${BASEDIR}feed/"
+  #echo $TARGETDIR
+  mkdir -p $TARGETDIR
+  cp $f $TARGETDIR
+done
