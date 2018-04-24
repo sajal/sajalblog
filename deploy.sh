@@ -10,7 +10,7 @@ echo "Signing"
 find ../sajal.github.io/ | grep '\.html' | xargs -n1 -iX  ./signhtml.sh 'X'
 echo "Update done"
 #Match ancient feed urls from wordpress days
-for f in $(find ../sajal.github.io/tag/ -name index.xml)
+for f in $(find ../sajal.github.io/tag/ -type f -name index.xml -not -path "*/feed/index.xml")
 do
   #echo $f
   BASEDIR=$(echo $f | sed "s/index\.xml//g")
